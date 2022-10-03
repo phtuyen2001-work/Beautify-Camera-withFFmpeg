@@ -6,12 +6,12 @@ import * as ImagePicker from "expo-image-picker"
 import CameraComponent from './CameraComponent';
 import SwitchSVG from './SVG/SwitchSVG';
 import { CameraType } from 'expo-camera';
+import SideControl from './SideControl';
 
 export default function MainControl({ containerStyle }) {
   const [cameraMode, setCameraMode] = useState("photo")
-  const [camType, setCamType] = useState(CameraType.back)
-  const [previewImg, setPreviewImg] = useState(() => getPreviewPhoto())
   const [isRecording, setIsRecording] = useState(false)
+  const [camType, setCamType] = useState(CameraType.back)
 
   const camera = useRef()
 
@@ -28,40 +28,12 @@ export default function MainControl({ containerStyle }) {
     setCamType((current) => (current === CameraType.back ? CameraType.front : CameraType.back))
   }
 
-  //Switch the camera mode (photo and video)
-  const switchMode = (btnPressed) => {
-    if (cameraMode === "photo") {
-      if (btnPressed === "video") setCameraMode("video")
-      else return
-    }
-    else {
-      if (btnPressed === "photo") setCameraMode("photo")
-      else return
-    }
-  }
-
-  //Get the newest photo for previewPhoto view
-  async function getPreviewPhoto() {
-    let arrAssets = await MediaLibrary.getAssetsAsync({
-      sortBy: "creationTime",
-      mediaType: ["photo", "video"]
-    })
-    let assetWithID = await MediaLibrary.getAssetInfoAsync(arrAssets.assets[0].id)
-    setPreviewImg(assetWithID)
-  }
-
-  //To open the user's media library
-  const openImagePickerUI = async () => {
-    const pickerResult = await ImagePicker.launchImageLibraryAsync()
-    // console.log(pickerResult)
-  }
-
   //To take photo with camera
   const takePhoto = async () => {
     if (!camera) return
     const photo = await camera.current.takePictureAsync()
 
-    // console.log(photo)
+    console.log(photo)
   }
 
   //To record video with camera
@@ -90,7 +62,7 @@ export default function MainControl({ containerStyle }) {
         cameraRef={camera}
       >
         <View style={styles.topView}>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={flipCameraType}
           >
             <SwitchSVG />
@@ -98,72 +70,34 @@ export default function MainControl({ containerStyle }) {
         </View>
       </CameraComponent>
 
-      <View style={styles.btnContainer}>
-        <View style={styles.cameraBtns}>
+      <SideControl
+        cameraMode={cameraMode}
+        setCameraModeFunc={setCameraMode}
+      >
+        {cameraMode === "photo" ?
           <TouchableOpacity
-            // style={styles}
-            onPress={openImagePickerUI}
+            style={styles.actionBtn}
+            onPress={takePhoto}
           >
-            <Image
-              style={styles.libraryImg}
-              source={{
-                uri: previewImg ? previewImg.localUri : "../assets/photo.jpeg"
-              }}
-            />
+            <View style={styles.inner}></View>
           </TouchableOpacity>
-
-          {cameraMode === "photo" ?
-            <TouchableOpacity
-              style={styles.actionBtn}
-              onPress={takePhoto}
-            >
-              <View style={styles.inner}></View>
-            </TouchableOpacity>
-            :
-            <TouchableOpacity
-              style={styles.actionBtn}
-              onPress={recordVideo}
-            >
-              {!isRecording ?
-                <View style={styles.innerWhite}><View style={styles.innerRed}></View></View>
-                :
-                <View style={styles.innerWhite}>
-                  <View style={styles.innerSquare}>
-                    <Text style={{ fontSize: 12 }}>00:00</Text>
-                  </View>
+          :
+          <TouchableOpacity
+            style={styles.actionBtn}
+            onPress={recordVideo}
+          >
+            {!isRecording ?
+              <View style={styles.innerWhite}><View style={styles.innerRed}></View></View>
+              :
+              <View style={styles.innerWhite}>
+                <View style={styles.innerSquare}>
+                  <Text style={{ fontSize: 12 }}>00:00</Text>
                 </View>
-              }
-            </TouchableOpacity>
-          }
-
-          <TouchableOpacity
-            style={styles.sideBtn}
-          >
-            {/* <Image 
-              source={require("../assets/edit.svg")}
-            /> */}
-            <EditSVG
-              width={32}
-              height={32}
-            />
+              </View>
+            }
           </TouchableOpacity>
-        </View>
-
-        <View style={styles.switchBtns}>
-          <TouchableOpacity
-            onPress={() => switchMode("photo")}
-            style={[styles.modeView, cameraMode === "photo" ? styles.selectedView : null]}
-          >
-            <Text style={[{ fontWeight: "700" }, cameraMode === "photo" ? styles.selectedViewText : null]}>Photo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => switchMode("video")}
-            style={[styles.modeView, cameraMode === "video" ? styles.selectedView : null]}
-          >
-            <Text style={[{ fontWeight: "700" }, cameraMode === "video" ? styles.selectedViewText : null]}>Video</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        }
+      </SideControl>
     </View>
   )
 }
@@ -176,33 +110,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     paddingHorizontal: 10,
     paddingTop: 10
-  },
-
-  btnContainer: {
-    backgroundColor: "#fff",
-    flex: 2,
-    flexDirection: 'column',
-    alignItems: "center",
-    justifyContent: "space-around"
-  },
-  cameraBtns: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-end",
-    justifyContent: "space-evenly"
-  },
-
-  sideBtn: {
-    borderWidth: 2,
-    borderColor: "#000",
-    borderRadius: 8,
-    padding: 3,
-  },
-  libraryImg: {
-    width: 45,
-    height: 45,
-    borderRadius: 5,
   },
 
   actionBtn: {
@@ -248,25 +155,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
-
-
-  switchBtns: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  modeView: {
-    marginHorizontal: 10,
-  },
-  selectedView: {
-    backgroundColor: "#000",
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    borderRadius: 90,
-    textAlign: "center"
-  },
-  selectedViewText: {
-    color: "#fff",
-  },
-
 })

@@ -1,19 +1,25 @@
-import { View, StyleSheet, Text, TouchableOpacity, Button, Image } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import EditSVG from './SVG/EditSVG';
-import * as MediaLibrary from 'expo-media-library';
-import * as ImagePicker from "expo-image-picker"
 import CameraComponent from './CameraComponent';
 import SwitchSVG from './SVG/SwitchSVG';
 import { CameraType } from 'expo-camera';
 import SideControl from './SideControl';
+import FiltersControl from './FiltersControl';
+import { Canvas, ColorMatrix } from '@shopify/react-native-skia';
+import * as MediaLibrary from 'expo-media-library';
 
-export default function MainControl({ containerStyle }) {
+export default function MainPanel({ containerStyle }) {
   const [cameraMode, setCameraMode] = useState("photo")
   const [isRecording, setIsRecording] = useState(false)
   const [camType, setCamType] = useState(CameraType.back)
-
   const camera = useRef()
+
+  const filtersControl = useRef()
+
+  // const [isFiltersUp, setIsFiltersUp] = useState(-1)
+  const handleOpenFilters = () => {
+    filtersControl.current?.snapToIndex(0)
+  }
 
   // To stop recording when switch to photo mode without stopping the record first
   useEffect(() => {
@@ -25,7 +31,9 @@ export default function MainControl({ containerStyle }) {
 
   //Flip the camera type (back and front)
   const flipCameraType = () => {
-    setCamType((current) => (current === CameraType.back ? CameraType.front : CameraType.back))
+    setCamType((current) => (
+      current === CameraType.back ? CameraType.front : CameraType.back
+    ))
   }
 
   //To take photo with camera
@@ -34,6 +42,7 @@ export default function MainControl({ containerStyle }) {
     const photo = await camera.current.takePictureAsync()
 
     console.log(photo)
+    MediaLibrary.saveToLibraryAsync(photo.uri)
   }
 
   //To record video with camera
@@ -44,6 +53,7 @@ export default function MainControl({ containerStyle }) {
       const video = await camera.current.recordAsync()
 
       console.log(video)
+      MediaLibrary.saveToLibraryAsync(video.uri)
     }
     else {
       setIsRecording(false)
@@ -55,9 +65,6 @@ export default function MainControl({ containerStyle }) {
     <View style={{ ...containerStyle }}>
 
       <CameraComponent
-        cameraStyle={{
-          flex: 9
-        }}
         type={camType}
         cameraRef={camera}
       >
@@ -68,11 +75,21 @@ export default function MainControl({ containerStyle }) {
             <SwitchSVG />
           </TouchableOpacity>
         </View>
+
+        {/* <Canvas style={styles.canvas}>
+          <ColorMatrix matrix={[
+            0.2126, 0.7152, 0.0722, 0, 0,
+            0.2126, 0.7152, 0.0722, 0, 0,
+            0.2126, 0.7152, 0.0722, 0, 0,
+            0, 0, 0, 1, 0,
+          ]} />
+        </Canvas> */}
       </CameraComponent>
 
       <SideControl
         cameraMode={cameraMode}
         setCameraModeFunc={setCameraMode}
+        openFiltersFunc={handleOpenFilters}
       >
         {cameraMode === "photo" ?
           <TouchableOpacity
@@ -98,18 +115,26 @@ export default function MainControl({ containerStyle }) {
           </TouchableOpacity>
         }
       </SideControl>
+
+      <FiltersControl
+        filtersControlRef={filtersControl}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   topView: {
+    top: 10,
+    right: 10,
     backgroundColor: "rgba(00,00,00, 0.0)",
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-end",
-    paddingHorizontal: 10,
-    paddingTop: 10
+  },
+
+  canvas: {
+    flex: 1,
   },
 
   actionBtn: {

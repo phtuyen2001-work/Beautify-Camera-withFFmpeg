@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from "expo-image-picker"
@@ -29,11 +29,13 @@ const SideControl = (props) => {
     async function getPreviewPhoto() {
         let arrAssets = await MediaLibrary.getAssetsAsync({
             sortBy: "creationTime",
-            mediaType: ["photo", "video"]
+            mediaType: ["photo"]
         })
         let assetWithID = await MediaLibrary.getAssetInfoAsync(arrAssets.assets[0].id)
         setPreviewImg(assetWithID)
     }
+
+    
 
     return (
         <View style={styles.btnContainer}>
@@ -50,11 +52,12 @@ const SideControl = (props) => {
                     />
                 </TouchableOpacity>
 
+                {/* Main action camera button */}
                 {props.children}
 
                 <TouchableOpacity
                     style={styles.sideBtn}
-                    onPress
+                    onPress={props.openFiltersFunc}
                 >
                     <EditSVG
                         width={32}
@@ -84,7 +87,8 @@ const SideControl = (props) => {
 const styles = StyleSheet.create({
     btnContainer: {
         backgroundColor: "#fff",
-        flex: 2,
+        height: "20%",
+        display: 'flex',
         flexDirection: 'column',
         alignItems: "center",
         justifyContent: "space-around"

@@ -8,7 +8,7 @@ import FiltersControl from './FiltersControl';
 import { Canvas, ColorMatrix } from '@shopify/react-native-skia';
 import * as MediaLibrary from 'expo-media-library';
 
-export default function MainPanel({ containerStyle }) {
+export default function MainPanel({ navigation }) {
   const [cameraMode, setCameraMode] = useState("photo")
   const [isRecording, setIsRecording] = useState(false)
   const [camType, setCamType] = useState(CameraType.back)
@@ -62,8 +62,9 @@ export default function MainPanel({ containerStyle }) {
   }
 
   return (
-    <View style={{ ...containerStyle }}>
+    <View style={{ flex: 1 }}>
 
+      {/* Camera component and Gesture handler*/}
       <CameraComponent
         type={camType}
         cameraRef={camera}
@@ -133,9 +134,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 
-  canvas: {
-    flex: 1,
-  },
 
   actionBtn: {
     backgroundColor: "#B1E4E7",

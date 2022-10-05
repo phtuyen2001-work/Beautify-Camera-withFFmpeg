@@ -3,8 +3,11 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from "expo-image-picker"
 import EditSVG from './SVG/EditSVG';
+import { useNavigation } from '@react-navigation/native';
 
 const SideControl = (props) => {
+    const navigation = useNavigation();
+
     const [previewImg, setPreviewImg] = useState(() => getPreviewPhoto())
 
     //Switch the camera mode (photo and video)
@@ -21,8 +24,11 @@ const SideControl = (props) => {
 
     //To open the user's media library
     const openImagePickerUI = async () => {
-        const pickerResult = await ImagePicker.launchImageLibraryAsync()
+        const pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All
+        })
         // console.log(pickerResult)
+        navigation.navigate("MainEditor", { ...pickerResult })
     }
 
     //Get the newest photo for previewPhoto view
@@ -34,8 +40,6 @@ const SideControl = (props) => {
         let assetWithID = await MediaLibrary.getAssetInfoAsync(arrAssets.assets[0].id)
         setPreviewImg(assetWithID)
     }
-
-    
 
     return (
         <View style={styles.btnContainer}>

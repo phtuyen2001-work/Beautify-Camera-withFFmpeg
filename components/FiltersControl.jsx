@@ -7,7 +7,10 @@ import OptionSVG from './SVG/OptionSVG'
 import BottomSheet from '@gorhom/bottom-sheet';
 
 const FiltersControl = (props) => {
-    const snapPoints = useMemo(() => ["25%"], [])
+    //props.stay to indicate whether this FiltersControl be able to close completely
+    const snapPoints = useMemo(
+        () => props.stay ? ["5%", "20%"] : ["20%"],
+    [])
 
     const handleSheetChanges = useCallback((index) => {
         console.log("handle sheet changes", index)
@@ -23,11 +26,11 @@ const FiltersControl = (props) => {
     return (
         <>
             <BottomSheet
-                index={-1}
+                index={props.stay ? 0 : -1}
                 ref={props.filtersControlRef}
                 snapPoints={snapPoints}
                 onChange={handleSheetChanges}
-                enablePanDownToClose
+                enablePanDownToClose={props.stay ? false : true}
                 backgroundStyle={{
                     backgroundColor: "#000",
                     borderRadius: 0
@@ -56,11 +59,11 @@ const FiltersControl = (props) => {
 
             </BottomSheet>
 
-            <Backbone 
+            <Backbone
                 sheetRef={filterRef}
                 title="Filter"
             >
-                <FilterLayers 
+                <FilterLayers
                     style={{
                         display: "flex",
                         backgroundColor: "red"

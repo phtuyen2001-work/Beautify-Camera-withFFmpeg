@@ -17,7 +17,7 @@ const Backbone = (props) => {
             ref={props.sheetRef}
             index={-1}
             snapPoints={snapPoints}
-            enablePanDownToClose
+            enablePanDownToClose={false}
             handleComponent={null}
             backgroundStyle={{
                 backgroundColor: "#000",

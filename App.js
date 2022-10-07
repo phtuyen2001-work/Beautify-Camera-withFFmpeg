@@ -1,17 +1,17 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import MainEditor from './components/MainEditor';
 import MainPanel from './components/MainPanel';
+import AnimatedAppLoader from './components/SplashScreen/AnimatedAppLoader';
 import { store } from './store';
 
 const Stack = createNativeStackNavigator()
 
-export default function App() {
-
+function Main() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar hidden />
@@ -32,17 +32,24 @@ export default function App() {
                 backgroundColor: "#000"
               },
               title: "",
-              
+
             }}
           />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
-  );
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default function App() {
+
+  const image = {
+    uri: require("./assets/splash.png")
+  }
+
+  return (
+    <AnimatedAppLoader image={image}>
+      <Main />
+    </AnimatedAppLoader>
+  );
+}

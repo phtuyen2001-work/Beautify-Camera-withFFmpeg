@@ -26,7 +26,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#B1E4E7"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

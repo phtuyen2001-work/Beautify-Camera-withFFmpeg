@@ -1,14 +1,17 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import ContrastSaturationBrightness from './ContrastSaturationBrightness'
 
 const Effects = (props) => {
     const { children } = props
 
+    const { contrast, saturation, brightness } = useSelector(state => state.canvasCam)
+
     return (
         <ContrastSaturationBrightness
-            contrast={1}
-            saturation={1}
-            brightness={1}
+            contrast={contrast}
+            saturation={saturation}
+            brightness={brightness}
         >
             {children}
         </ContrastSaturationBrightness>

@@ -4,9 +4,12 @@ import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from "expo-image-picker"
 import EditSVG from './SVG/EditSVG';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { resetCanvas } from '../redux/slice/canvasSlice';
 
 const SideControl = (props) => {
     const navigation = useNavigation();
+    const dispatch = useDispatch()
 
     const [previewImg, setPreviewImg] = useState(() => getPreviewPhoto())
 
@@ -28,9 +31,11 @@ const SideControl = (props) => {
             mediaTypes: ImagePicker.MediaTypeOptions.All
         })
         
-        // console.log(pickerResult)
-        if(!pickerResult.cancelled)
+        if(!pickerResult.cancelled) {
+            //reset canvas before navigating to the MainEditor
+            dispatch(resetCanvas())
             navigation.navigate("MainEditor", { ...pickerResult })
+        }
     }
 
     //Get the newest photo for previewPhoto view

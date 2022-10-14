@@ -17,24 +17,21 @@ function Main() {
       <StatusBar hidden />
       <BottomSheetModalProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName='MainPanel'>
+          <Stack.Navigator
+            initialRouteName='MainPanel'
+            screenOptions={{
+              headerShown: false
+            }}
+          >
             <Stack.Screen
               name='MainPanel'
               component={MainPanel}
-              options={{
-                headerShown: false,
-              }}
+
             />
             <Stack.Screen
               name='MainEditor'
               component={MainEditor}
-              options={{
-                headerStyle: {
-                  backgroundColor: "#000"
-                },
-                title: "",
 
-              }}
             />
           </Stack.Navigator>
         </NavigationContainer>

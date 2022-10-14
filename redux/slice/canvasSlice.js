@@ -17,11 +17,17 @@ export const canvasSlice = createSlice({
         setBrightness: (state, action) => {
             state.brightness = action.payload
         },
+        resetCanvas: (state) => {
+            state.contrast = 1
+            state.saturation = 1
+            state.brightness = 1
+        }
     }
 });
 
-export const { 
-    setContrast, setSaturation, setBrightness 
+export const {
+    setContrast, setSaturation, setBrightness,
+    resetCanvas
 } = canvasSlice.actions
 
 export default canvasSlice.reducer

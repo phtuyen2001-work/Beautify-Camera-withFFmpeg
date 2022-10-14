@@ -61,6 +61,7 @@ const SliderBox = (props) => {
                     maximumTrackTintColor="#808080"
                     minimumValue={0}
                     maximumValue={2}
+                    step={0.05}
                     value={value}
                     onValueChange={handleValueChange}
                 />

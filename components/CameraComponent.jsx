@@ -6,6 +6,10 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 export default function CameraComponent(props) {
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const [zoom, setZoom] = useState(0)
+    const [isCameraReady, setIsCameraReady] = useState(false)
+    const onCameraReady = () => {
+        setIsCameraReady(true);
+    };
 
     //TODO: WORK ON PINCH GESTURE
     const pinch = Gesture.Pinch()
@@ -13,7 +17,7 @@ export default function CameraComponent(props) {
             // console.log(e)
         })
         .onChange((e) => {
-            if(e.scale < 1 && zoom < 0.95) setZoom(zoom + 0.005)
+            if (e.scale < 1 && zoom < 0.95) setZoom(zoom + 0.005)
             else if (e.scale > 1 && zoom > 0.05) setZoom(zoom - 0.005)
         })
 
@@ -38,13 +42,14 @@ export default function CameraComponent(props) {
 
     return (
         <GestureDetector
-            gesture={pinch}
+            gesture={gesture}
         >
             <Camera
                 style={[styles.camera, props.cameraStyle]}
                 ref={props.cameraRef}
                 type={props.type}
                 zoom={zoom}
+                onCameraReady={onCameraReady}
                 {...props}
             >
                 {props.children}

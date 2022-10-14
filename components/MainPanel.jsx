@@ -5,7 +5,6 @@ import SwitchSVG from './SVG/SwitchSVG';
 import { CameraType } from 'expo-camera';
 import SideControl from './SideControl';
 import FiltersControl from './FiltersControl';
-import { Canvas, ColorMatrix } from '@shopify/react-native-skia';
 import * as MediaLibrary from 'expo-media-library';
 
 export default function MainPanel({ navigation }) {
@@ -76,15 +75,6 @@ export default function MainPanel({ navigation }) {
             <SwitchSVG />
           </TouchableOpacity>
         </View>
-
-        {/* <Canvas style={styles.canvas}>
-          <ColorMatrix matrix={[
-            0.2126, 0.7152, 0.0722, 0, 0,
-            0.2126, 0.7152, 0.0722, 0, 0,
-            0.2126, 0.7152, 0.0722, 0, 0,
-            0, 0, 0, 1, 0,
-          ]} />
-        </Canvas> */}
       </CameraComponent>
 
       <SideControl

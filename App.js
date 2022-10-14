@@ -1,7 +1,7 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import MainEditor from './components/MainEditor';
@@ -15,28 +15,30 @@ function Main() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar hidden />
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName='MainPanel'>
-          <Stack.Screen
-            name='MainPanel'
-            component={MainPanel}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name='MainEditor'
-            component={MainEditor}
-            options={{
-              headerStyle: {
-                backgroundColor: "#000"
-              },
-              title: "",
+      <BottomSheetModalProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName='MainPanel'>
+            <Stack.Screen
+              name='MainPanel'
+              component={MainPanel}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name='MainEditor'
+              component={MainEditor}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#000"
+                },
+                title: "",
 
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   )
 }

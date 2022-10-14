@@ -1,24 +1,22 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Backbone from './Filters/Backbone'
-import FilterLayers from './Filters/FilterLayers'
+import EditsContainer from './Filters/EditsContainer'
 import FilterSVG from './SVG/FilterSVG'
 import OptionSVG from './SVG/OptionSVG'
 import BottomSheet from '@gorhom/bottom-sheet';
+import FiltersBox from './Filters/FiltersBox'
+import OptionsBox from './Filters/OptionsBox'
 
 const FiltersControl = (props) => {
     //props.stay to indicate whether this FiltersControl be able to close completely
-    const snapPoints = useMemo(
-        () => props.stay ? ["5%", "20%"] : ["20%"],
-    [])
+    const { stay, filtersControlRef } = props
 
-    const handleSheetChanges = useCallback((index) => {
-        console.log("handle sheet changes", index)
-    }, [])
+    const snapPoints = useMemo(
+        () => stay ? ["5%", "20%"] : ["20%"], [])
 
     const filterRef = useRef()
     const optionRef = useRef()
-    const handleOpenSheet = (ref) => {
+    const handleOpenSheetModal = (ref) => {
         ref.current?.snapToIndex(0)
     }
 
@@ -26,11 +24,10 @@ const FiltersControl = (props) => {
     return (
         <>
             <BottomSheet
-                index={props.stay ? 0 : -1}
-                ref={props.filtersControlRef}
+                index={stay ? 0 : -1}
+                ref={filtersControlRef}
                 snapPoints={snapPoints}
-                onChange={handleSheetChanges}
-                enablePanDownToClose={props.stay ? false : true}
+                enablePanDownToClose={stay ? false : true}
                 backgroundStyle={{
                     backgroundColor: "#000",
                     borderRadius: 0
@@ -42,7 +39,7 @@ const FiltersControl = (props) => {
                 <View style={styles.btnsView}>
                     <TouchableOpacity
                         style={styles.btnWrap}
-                        onPress={() => handleOpenSheet(filterRef)}
+                        onPress={() => handleOpenSheetModal(filterRef)}
                     >
                         <FilterSVG />
                         <Text style={styles.btnText}>Filters</Text>
@@ -50,7 +47,7 @@ const FiltersControl = (props) => {
 
                     <TouchableOpacity
                         style={styles.btnWrap}
-                        onPress={() => handleOpenSheet(optionRef)}
+                        onPress={() => handleOpenSheetModal(optionRef)}
                     >
                         <OptionSVG />
                         <Text style={styles.btnText}>Options</Text>
@@ -59,24 +56,30 @@ const FiltersControl = (props) => {
 
             </BottomSheet>
 
-            <Backbone
+            <EditsContainer
                 sheetRef={filterRef}
                 title="Filter"
             >
-                <FilterLayers
-                    style={{
-                        display: "flex",
-                        backgroundColor: "red"
-                    }}
+                <FiltersBox
+                   
                 />
-            </Backbone>
+            </EditsContainer>
 
-            <Backbone
-                sheetRef={optionRef}
-                title="Options"
+            <BottomSheet
+                ref={optionRef}
+                index={-1}
+                snapPoints={["20%"]}
+                enablePanDownToClose={true}
+                backgroundStyle={{
+                    backgroundColor: "#000",
+                    borderRadius: 0
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: "#fff"
+                }}
             >
-
-            </Backbone>
+                <OptionsBox />
+            </BottomSheet>
         </>
     )
 }

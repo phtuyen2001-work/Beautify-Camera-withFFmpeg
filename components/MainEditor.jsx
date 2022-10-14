@@ -1,21 +1,43 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import SideControl from './SideControl'
+import { Dimensions, StyleSheet, View } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import FiltersControl from './FiltersControl'
 
+//Import components from gl-react
+import GLImage from "gl-react-image";
+import { Surface } from "gl-react-expo";
+import { manipulateAsync } from 'expo-image-manipulator';
+import Effects from './Effects/Effects';
+
+const deviceWidth = Dimensions.get("window").width
+
 const MainEditor = ({ route, navigation }) => {
+    const [image, setImage] = useState(null)
+
+    useEffect(() => {
+        (async () => {
+            const img = route.params.uri
+            const manipResult = await manipulateAsync(
+                img,
+                [{ resize: { width: deviceWidth } }]
+            )
+            setImage(manipResult)
+        })()
+    }, [route])
+
     return (
         <View style={styles.container}>
-            <View>
-                <Image
-                    style={{
-                        height: "100%"
-                    }}
-                    source={{uri: route.params.uri}}
-                />
-            </View>
+            <Surface style={{ width: "100%", height: "100%" }}>
+                <Effects
+                    
+                >
+                    <GLImage
+                        resizeMode='contain'
+                        source={{ uri: image?.uri }}
+                    />
+                </Effects>
+            </Surface>
 
-            <FiltersControl 
+            <FiltersControl
                 stay={true}
             />
         </View>
@@ -25,7 +47,7 @@ const MainEditor = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "red"
+        backgroundColor: "#000"
     }
 })
 

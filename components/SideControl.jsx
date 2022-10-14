@@ -27,8 +27,10 @@ const SideControl = (props) => {
         const pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All
         })
+        
         // console.log(pickerResult)
-        navigation.navigate("MainEditor", { ...pickerResult })
+        if(!pickerResult.cancelled)
+            navigation.navigate("MainEditor", { ...pickerResult })
     }
 
     //Get the newest photo for previewPhoto view

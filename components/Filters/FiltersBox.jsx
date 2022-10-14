@@ -49,7 +49,7 @@ const filters = {
     ],
 }
 
-export default function FilterLayers() {
+export default function FiltersBox() {
     const [selectedFilter, setSelectedFilter] = useState("Normal")
 
     const handlePress = (item) => {
@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
         color: "#fff",
         marginTop: 5,
         paddingVertical: 1,
-        paddingHorizontal: 4
+        paddingHorizontal: 4,
+        borderWidth: 1,
+        borderRadius: 12,
     },
     selectedItem: {
         color: '#ea4c89',
-        borderWidth: 1,
         borderColor: '#ea4c89',
-        borderRadius: 12,
     }
 })

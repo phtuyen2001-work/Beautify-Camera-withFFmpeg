@@ -3,16 +3,38 @@ import React, { useState } from 'react'
 import Slider from '@react-native-community/slider'
 import CloseSVG from '../../SVG/CloseSVG'
 import CheckSVG from '../../SVG/CheckSVG'
+import { useDispatch, useSelector } from 'react-redux'
+import { setContrast, setSaturation, setBrightness } from '../../../redux/slice/canvasSlice'
 
-const Contrast = (props) => {
+const SliderBox = (props) => {
     const { sheetRef, title } = props
 
+    const obj = useSelector((state) => state.canvasCam)
+    const dispatch = useDispatch()
+
+    //to show value under the slider
     const [value, setValue] = useState(1)
     const handleValueChange = (e) => {
         setValue(e)
     }
 
     const handleClose = () => {
+        sheetRef.current?.close()
+    }
+
+    const handleCheck = () => {
+        switch (title.toLowerCase()) {
+            case 'contrast':
+                dispatch(setContrast(value))
+                break;
+            case 'saturation':
+                dispatch(setSaturation(value))
+                break;
+            case 'brightness':
+                dispatch(setBrightness(value))
+                break;
+        }
+        console.log("state", obj)
         sheetRef.current?.close()
     }
 
@@ -26,7 +48,7 @@ const Contrast = (props) => {
                 </TouchableOpacity>
                 <Text style={styles.title}>{title}</Text>
                 <TouchableOpacity
-                    
+                    onPress={handleCheck}
                 >
                     <CheckSVG />
                 </TouchableOpacity>
@@ -48,7 +70,7 @@ const Contrast = (props) => {
     )
 }
 
-export default Contrast
+export default SliderBox
 
 const styles = StyleSheet.create({
     container: {

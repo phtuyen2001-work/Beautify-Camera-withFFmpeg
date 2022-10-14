@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import MainEditor from './components/MainEditor';
 import MainPanel from './components/MainPanel';
 import AnimatedAppLoader from './components/SplashScreen/AnimatedAppLoader';
-import { store } from './store';
+import { store } from "./redux/store"
 
 const Stack = createNativeStackNavigator()
 
@@ -51,7 +51,9 @@ export default function App() {
 
   return (
     <AnimatedAppLoader image={image}>
-      <Main />
+      <Provider store={store}>
+        <Main />
+      </Provider>
     </AnimatedAppLoader>
   );
 }

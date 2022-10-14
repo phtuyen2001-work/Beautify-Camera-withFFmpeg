@@ -5,7 +5,7 @@ import FilterSVG from './SVG/FilterSVG'
 import OptionSVG from './SVG/OptionSVG'
 import BottomSheet from '@gorhom/bottom-sheet';
 import FiltersBox from './Filters/FiltersBox'
-import OptionsBox from './Filters/OptionsBox'
+import OptionsContainer from './Filters/OptionsContainer'
 
 const FiltersControl = (props) => {
     //props.stay to indicate whether this FiltersControl be able to close completely
@@ -58,10 +58,9 @@ const FiltersControl = (props) => {
 
             <EditsContainer
                 sheetRef={filterRef}
-                title="Filter"
             >
                 <FiltersBox
-                   
+                    title="Filter"
                 />
             </EditsContainer>
 
@@ -78,7 +77,7 @@ const FiltersControl = (props) => {
                     backgroundColor: "#fff"
                 }}
             >
-                <OptionsBox />
+                <OptionsContainer />
             </BottomSheet>
         </>
     )

@@ -2,10 +2,10 @@ import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-nati
 import React, { useMemo, useEffect, useRef } from 'react'
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import EditsContainer from './EditsContainer'
-import Contrast from './Options/Contrast'
+import SliderBox from './Options/SliderBox'
 
 
-const OptionsBox = (props) => {
+const OptionsContainer = (props) => {
     const { } = props
 
     const contrastRef = useRef()
@@ -66,7 +66,7 @@ const OptionsBox = (props) => {
             <EditsContainer
                 sheetRef={contrastRef}
             >
-                <Contrast
+                <SliderBox
                     title="Contrast"
                 />
             </EditsContainer>
@@ -75,20 +75,24 @@ const OptionsBox = (props) => {
                 sheetRef={saturationRef}
                 title="Saturation"
             >
-
+                <SliderBox
+                    title="Saturation"
+                />
             </EditsContainer>
 
             <EditsContainer
                 sheetRef={brightnessRef}
                 title="Brightness"
             >
-
+                <SliderBox
+                    title="Brightness"
+                />
             </EditsContainer>
         </>
     )
 }
 
-export default OptionsBox
+export default OptionsContainer
 
 const styles = StyleSheet.create({
     container: {

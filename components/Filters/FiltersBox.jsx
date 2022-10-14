@@ -1,6 +1,8 @@
-import { FlatList, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import { Canvas, ColorMatrix, Image, useImage } from '@shopify/react-native-skia';
+import CloseSVG from '../SVG/CloseSVG';
+import CheckSVG from '../SVG/CheckSVG';
 
 // const img = require("../../assets/photo.jpeg")
 
@@ -49,8 +51,13 @@ const filters = {
     ],
 }
 
-export default function FiltersBox() {
+export default function FiltersBox(props) {
+    const { title, sheetRef } = props
     const [selectedFilter, setSelectedFilter] = useState("Normal")
+
+    const handleClose = () => {
+        sheetRef.current?.close()
+    }
 
     const handlePress = (item) => {
         setSelectedFilter(item.item)
@@ -61,44 +68,60 @@ export default function FiltersBox() {
     if (img === null) return null;
 
     return (
-        <FlatList
-            horizontal
-            data={Object.keys(filters)}
-            ItemSeparatorComponent={() => (<View style={{ marginHorizontal: 5 }}></View>)}
-            keyExtractor={(_, index) => index}
-            style={styles.container}
-            contentContainerStyle={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-            }}
-            renderItem={(item) => (
-                <TouchableWithoutFeedback
-                    onPress={() => handlePress(item)}
+        <View style={styles.container}>
+            <View style={styles.top}>
+                <TouchableOpacity
+                    onPress={handleClose}
                 >
-                    <View style={styles.itemWrap}>
-                        <Canvas style={{ width: 50, height: 55 }}>
-                            {img &&
-                                <Image
-                                    x={0}
-                                    y={0}
-                                    fit={"contain"}
-                                    width={45}
-                                    height={55}
-                                    image={img}
-                                >
-                                    <ColorMatrix matrix={filters[item.item]}/>
-                                </Image>
-                            }
-                        </Canvas>
-                        <Text style={[
-                            styles.textItem,
-                            selectedFilter === item.item && styles.selectedItem
-                        ]}
+                    <CloseSVG />
+                </TouchableOpacity>
+                <Text style={styles.title}>{title}</Text>
+                <TouchableOpacity
+                    // onPress={handleCheck}
+                >
+                    <CheckSVG />
+                </TouchableOpacity>
+            </View>
+
+            <View style={[styles.bottom]}>
+                <FlatList
+                    horizontal
+                    data={Object.keys(filters)}
+                    ItemSeparatorComponent={() => (<View style={{ marginHorizontal: 5 }}></View>)}
+                    keyExtractor={(_, index) => index}
+                    style={styles.container}
+                    contentContainerStyle={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                    renderItem={(item) => (
+                        <TouchableWithoutFeedback
+                            onPress={() => handlePress(item)}
                         >
-                            {item.item}
-                        </Text>
-                        {/* <Image
+                            <View style={styles.itemWrap}>
+                                <Canvas style={{ width: 50, height: 55 }}>
+                                    {img &&
+                                        <Image
+                                            x={0}
+                                            y={0}
+                                            fit={"contain"}
+                                            width={45}
+                                            height={55}
+                                            image={img}
+                                        >
+                                            <ColorMatrix matrix={filters[item.item]} />
+                                        </Image>
+                                    }
+                                </Canvas>
+                                <Text style={[
+                                    styles.textItem,
+                                    selectedFilter === item.item && styles.selectedItem
+                                ]}
+                                >
+                                    {item.item}
+                                </Text>
+                                {/* <Image
                                 style={styles.img}
                                 image={img}
                             />
@@ -109,10 +132,13 @@ export default function FiltersBox() {
                             >
                                 {item.item}
                             </Text> */}
-                    </View>
-                </TouchableWithoutFeedback>
-            )}
-        />
+                            </View>
+                        </TouchableWithoutFeedback>
+                    )}
+                />
+            </View>
+        </View>
+
     )
 }
 
@@ -120,6 +146,24 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    top: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: 10,
+        paddingHorizontal: 5
+    },
+    title: {
+        color: "#fff",
+        fontWeight: "500",
+        fontSize: 17,
+    },
+    bottom: {
+        flex: 1,
+        justifyContent: "space-evenly",
+        alignItems: "center"
+    },
+
     img: {
         width: 45,
         height: 55

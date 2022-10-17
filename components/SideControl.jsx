@@ -32,9 +32,10 @@ const SideControl = (props) => {
         })
         
         if(!pickerResult.cancelled) {
-            //reset canvas before navigating to the MainEditor
+            //reset canvas before navigating to the EditScreen
             dispatch(resetCanvas())
-            navigation.navigate("MainEditor", { ...pickerResult })
+            // console.log(pickerResult)
+            navigation.navigate("EditScreen", { ...pickerResult })
         }
     }
 

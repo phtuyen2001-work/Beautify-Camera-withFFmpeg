@@ -6,8 +6,10 @@ import { CameraType } from 'expo-camera';
 import SideControl from './SideControl';
 import FiltersControl from './FiltersControl';
 import * as MediaLibrary from 'expo-media-library';
+import Toast from 'react-native-root-toast';
+import { showToast } from './CustomToast';
 
-export default function MainPanel({ navigation }) {
+export default function CameraScreen({ navigation }) {
   const [cameraMode, setCameraMode] = useState("photo")
   const [isRecording, setIsRecording] = useState(false)
   const [camType, setCamType] = useState(CameraType.back)
@@ -39,30 +41,36 @@ export default function MainPanel({ navigation }) {
   const takePhoto = async () => {
     if (!camera) return
     const photo = await camera.current.takePictureAsync()
+    showToast("Clicked")
 
-    console.log(photo)
-    MediaLibrary.saveToLibraryAsync(photo.uri)
+    // console.log(photo)
+    navigation.navigate("EditScreen", { ...photo, type: "image" })
+    // MediaLibrary.saveToLibraryAsync(photo.uri)
   }
 
-  //To record video with camera
-  const recordVideo = async () => {
+  const handleStartRecord = async () => {
     if (!camera) return
+
+    let video;
     if (!isRecording) {
       setIsRecording(true)
-      const video = await camera.current.recordAsync()
+      showToast("Start Recording...")
+      video = await camera.current.recordAsync()
 
-      console.log(video)
-      MediaLibrary.saveToLibraryAsync(video.uri)
     }
-    else {
-      setIsRecording(false)
-      camera.current.stopRecording()
-    }
+
+    if (video) navigation.navigate("EditScreen", { ...video, type: "video" })
+  }
+
+  const handleStopRecord = () => {
+    setIsRecording(false)
+    camera.current.stopRecording()
+
+    showToast("Stop recording!")
   }
 
   return (
     <View style={{ flex: 1 }}>
-
       {/* Camera component and Gesture handler*/}
       <CameraComponent
         type={camType}
@@ -90,20 +98,27 @@ export default function MainPanel({ navigation }) {
             <View style={styles.inner}></View>
           </TouchableOpacity>
           :
-          <TouchableOpacity
-            style={styles.actionBtn}
-            onPress={recordVideo}
-          >
+          <View>
             {!isRecording ?
-              <View style={styles.innerWhite}><View style={styles.innerRed}></View></View>
+              <TouchableOpacity
+                onPress={handleStartRecord}
+                style={styles.actionBtn}
+              >
+                <View style={styles.innerWhite}><View style={styles.innerRed}></View></View>
+              </TouchableOpacity>
               :
-              <View style={styles.innerWhite}>
-                <View style={styles.innerSquare}>
-                  <Text style={{ fontSize: 12 }}>00:00</Text>
+              <TouchableOpacity
+                onPress={handleStopRecord}
+                style={styles.actionBtn}
+              >
+                <View style={styles.innerWhite}>
+                  <View style={styles.innerSquare}>
+                    <Text style={{ fontSize: 12 }}>00:00</Text>
+                  </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             }
-          </TouchableOpacity>
+          </View>
         }
       </SideControl>
 

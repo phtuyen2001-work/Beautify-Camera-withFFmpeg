@@ -4,10 +4,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
-import MainEditor from './components/MainEditor';
-import MainPanel from './components/MainPanel';
+import EditScreen from './components/EditScreen';
+import CameraScreen from './components/CameraScreen';
 import AnimatedAppLoader from './components/SplashScreen/AnimatedAppLoader';
 import { store } from "./redux/store"
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 const Stack = createNativeStackNavigator()
 
@@ -18,19 +19,19 @@ function Main() {
       <BottomSheetModalProvider>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName='MainPanel'
+            initialRouteName='CameraScreen'
             screenOptions={{
               headerShown: false
             }}
           >
             <Stack.Screen
-              name='MainPanel'
-              component={MainPanel}
+              name='CameraScreen'
+              component={CameraScreen}
 
             />
             <Stack.Screen
-              name='MainEditor'
-              component={MainEditor}
+              name='EditScreen'
+              component={EditScreen}
 
             />
           </Stack.Navigator>
@@ -49,7 +50,9 @@ export default function App() {
   return (
     <AnimatedAppLoader image={image}>
       <Provider store={store}>
-        <Main />
+        <RootSiblingParent>
+          <Main />
+        </RootSiblingParent>
       </Provider>
     </AnimatedAppLoader>
   );

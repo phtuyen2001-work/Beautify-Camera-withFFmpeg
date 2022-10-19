@@ -5,16 +5,19 @@ import SwitchSVG from './SVG/SwitchSVG';
 import { CameraType } from 'expo-camera';
 import SideControl from './SideControl';
 import FiltersControl from './FiltersControl';
-import * as MediaLibrary from 'expo-media-library';
-import Toast from 'react-native-root-toast';
 import { showToast } from './CustomToast';
 
 export default function CameraScreen({ navigation }) {
-  const [cameraMode, setCameraMode] = useState("photo")
-  const [isRecording, setIsRecording] = useState(false)
+  //To switch the camera type: front / back
   const [camType, setCamType] = useState(CameraType.back)
-  const camera = useRef()
+  // To switch camera mode: photo / video
+  const [cameraMode, setCameraMode] = useState("photo")
+  // To indicate the recording state
+  const [isRecording, setIsRecording] = useState(false)
+  // To indicate the recording time
+  const [recordTime, setRecordTime] = useState(0)
 
+  const camera = useRef()
   const filtersControl = useRef()
 
   // const [isFiltersUp, setIsFiltersUp] = useState(-1)
@@ -29,6 +32,19 @@ export default function CameraScreen({ navigation }) {
       if (camera.current) camera.current.stopRecording()
     }
   }, [cameraMode])
+
+  // To convert the recording time
+  const convertTime = (time) => {
+    let minute = Math.floor(time/60)
+    let second = time%60
+
+    return `${minute.toLocaleString('en', {
+      minimumIntegerDigits: 2,
+      maximumFractionDigits: 0,
+    })}:${second.toLocaleString("en", {
+      minimumIntegerDigits: 2,
+    })}`
+  }
 
   //Flip the camera type (back and front)
   const flipCameraType = () => {
@@ -55,8 +71,15 @@ export default function CameraScreen({ navigation }) {
     if (!isRecording) {
       setIsRecording(true)
       showToast("Start Recording...")
+
+      const interval = setInterval(() => {
+        setRecordTime((prev) => prev + 1)
+      }, 1000)
+
       video = await camera.current.recordAsync()
 
+      clearInterval(interval)
+      setRecordTime(0)
     }
 
     if (video) navigation.navigate("EditScreen", { ...video, type: "video" })
@@ -71,6 +94,7 @@ export default function CameraScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
+      {console.log(recordTime)}
       {/* Camera component and Gesture handler*/}
       <CameraComponent
         type={camType}
@@ -99,25 +123,25 @@ export default function CameraScreen({ navigation }) {
           </TouchableOpacity>
           :
           <View>
-            {!isRecording ?
-              <TouchableOpacity
-                onPress={handleStartRecord}
-                style={styles.actionBtn}
-              >
-                <View style={styles.innerWhite}><View style={styles.innerRed}></View></View>
-              </TouchableOpacity>
-              :
-              <TouchableOpacity
-                onPress={handleStopRecord}
-                style={styles.actionBtn}
-              >
-                <View style={styles.innerWhite}>
-                  <View style={styles.innerSquare}>
-                    <Text style={{ fontSize: 12 }}>00:00</Text>
-                  </View>
+            <TouchableOpacity
+              onPress={handleStartRecord}
+              style={[styles.actionBtn, { display: isRecording ? "none" : "flex" }]}
+            >
+              <View style={styles.innerWhite}>
+                <View style={styles.innerRed}></View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleStopRecord}
+              style={[styles.actionBtn, { display: isRecording ? "flex" : "none" }]}
+            >
+              <View style={styles.innerWhite}>
+                <View style={styles.innerSquare}>
+                  <Text style={{ fontSize: 12 }}>{convertTime(recordTime)}</Text>
                 </View>
-              </TouchableOpacity>
-            }
+              </View>
+            </TouchableOpacity>
           </View>
         }
       </SideControl>

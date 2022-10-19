@@ -1,9 +1,7 @@
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, { useMemo, useEffect, useRef } from 'react'
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import EditsContainer from './EditsContainer'
-import SliderBox from './Options/SliderBox'
-
+import SliderBox from './slider/SliderBox'
 
 const OptionsContainer = (props) => {
     const { } = props
@@ -11,6 +9,7 @@ const OptionsContainer = (props) => {
     const contrastRef = useRef()
     const saturationRef = useRef()
     const brightnessRef = useRef()
+    const blurRef = useRef()
     const options = useMemo(() => ([
         {
             title: "Contrast",
@@ -23,6 +22,10 @@ const OptionsContainer = (props) => {
         {
             title: "Brightness",
             ref: brightnessRef
+        },
+        {
+            title: "Blur",
+            ref: blurRef
         }
     ]), [])
 
@@ -35,7 +38,8 @@ const OptionsContainer = (props) => {
         contrastRef.current?.present()
         saturationRef.current?.present()
         brightnessRef.current?.present()
-    }, [contrastRef, saturationRef, brightnessRef])
+        blurRef.current?.present()
+    }, [contrastRef, saturationRef, brightnessRef, blurRef])
 
     return (
         <>
@@ -66,26 +70,29 @@ const OptionsContainer = (props) => {
             <EditsContainer
                 sheetRef={contrastRef}
             >
-                <SliderBox
-                    title="Contrast"
-                />
+                <SliderBox title="Contrast" />
             </EditsContainer>
 
             <EditsContainer
                 sheetRef={saturationRef}
-                title="Saturation"
             >
-                <SliderBox
-                    title="Saturation"
-                />
+                <SliderBox title="Saturation" />
             </EditsContainer>
 
             <EditsContainer
                 sheetRef={brightnessRef}
-                title="Brightness"
+            >
+                <SliderBox title="Brightness" />
+            </EditsContainer>
+
+            <EditsContainer
+                sheetRef={blurRef}
             >
                 <SliderBox
-                    title="Brightness"
+                    initialValue={0}
+                    minimumValue={0}
+                    maximumValue={6}
+                    title="Blur"
                 />
             </EditsContainer>
         </>

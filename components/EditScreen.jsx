@@ -13,7 +13,6 @@ import Effects from './Effects/Effects';
 
 import { captureRef } from 'react-native-view-shot';
 import VideoComponent from './VideoComponent';
-import Toast from 'react-native-root-toast';
 import { showToast } from './CustomToast';
 
 
@@ -90,10 +89,9 @@ const EditScreen = ({ route, navigation }) => {
                 {route.params.type === "image" ? (
                     <Surface
                         ref={imgRef}
-                        style={{ width: "100%", height: "100%", }}
+                        style={{ width: windowWidth, height: windowHeight }}
                     >
-                        <Effects
-                        >
+                        <Effects>
                             <GLImage
                                 resizeMode='contain'
                                 source={{ uri: selected?.uri }}

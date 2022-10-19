@@ -1,10 +1,9 @@
-import React, { useMemo, useRef } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { useMemo } from 'react'
 import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useEffect } from 'react'
 
 const EditsContainer = (props) => {
-    const { children, style, sheetRef, title } = props
+    const { children, sheetRef, title } = props
 
     useEffect(() => {
         sheetRef.current?.present()
@@ -43,27 +42,5 @@ const EditsContainer = (props) => {
         </BottomSheetModal>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-
-    top: {
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingVertical: 10,
-        paddingHorizontal: 5
-    },
-    title: {
-        color: "#fff",
-        fontWeight: "500",
-        fontSize: 17,
-    },
-    bottom: {
-        flex: 1,
-    }
-})
 
 export default EditsContainer

@@ -3,17 +3,16 @@ import React, { useState } from 'react'
 import Slider from '@react-native-community/slider'
 import CloseSVG from '../../SVG/CloseSVG'
 import CheckSVG from '../../SVG/CheckSVG'
-import { useDispatch, useSelector } from 'react-redux'
-import { setContrast, setSaturation, setBrightness } from '../../../redux/slice/canvasSlice'
+import { useDispatch } from 'react-redux'
+import { setContrast, setSaturation, setBrightness, setBlur } from '../../../redux/slice/canvasSlice'
 
 const SliderBox = (props) => {
-    const { sheetRef, title } = props
+    const { sheetRef, title, minimumValue=0, maximumValue=2, step=0.05, initialValue=1 } = props
 
-    const obj = useSelector((state) => state.canvasCam)
     const dispatch = useDispatch()
 
     //to show value under the slider
-    const [value, setValue] = useState(1)
+    const [value, setValue] = useState(initialValue)
     const handleValueChange = (e) => {
         setValue(e)
     }
@@ -33,8 +32,10 @@ const SliderBox = (props) => {
             case 'brightness':
                 dispatch(setBrightness(value))
                 break;
+            case 'blur':
+                dispatch(setBlur(value))
+                break;
         }
-        console.log("state", obj)
         sheetRef.current?.close()
     }
 
@@ -59,9 +60,9 @@ const SliderBox = (props) => {
                     style={{ width: 200, height: 30 }}
                     minimumTrackTintColor="#fff"
                     maximumTrackTintColor="#808080"
-                    minimumValue={0}
-                    maximumValue={2}
-                    step={0.05}
+                    minimumValue={minimumValue}
+                    maximumValue={maximumValue}
+                    step={step}
                     value={value}
                     onValueChange={handleValueChange}
                 />

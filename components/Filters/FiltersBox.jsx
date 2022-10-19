@@ -1,71 +1,115 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
-import { Canvas, ColorMatrix, Image, useImage } from '@shopify/react-native-skia';
 import CloseSVG from '../SVG/CloseSVG';
 import CheckSVG from '../SVG/CheckSVG';
+import { Surface } from 'gl-react-expo';
+import ColorMatrix from '../Effects/ColorMatrix';
+import GLImage from 'gl-react-image';
+import { useDispatch } from 'react-redux';
+import { setColorMatrix, setColorOffset } from '../../redux/slice/canvasSlice';
 
-// const img = require("../../assets/photo.jpeg")
+const img = require("../../assets/photo.jpeg")
 
-const filters = {
-    ["Normal"]: [
-        1, 0, 0, 0, 0,
-        0, 1, 0, 0, 0,
-        0, 0, 1, 0, 0,
-        0, 0, 0, 1, 0,
-    ],
-    Juno: [
-        1, 0, 0, 0, 0,
-        -0.4, 1.3, -0.4, 0.2, -0.1,
-        0, 0, 1, 0, 0,
-        0, 0, 0, 1, 0,
-    ],
-    Sepia: [
-        0.393, 0.769, 0.189, 0, 0,
-        0.349, 0.686, 0.168, 0, 0,
-        0.272, 0.534, 0.131, 0, 0,
-        0, 0, 0, 1, 0,
-    ],
-    Greyscale: [
-        0.2126, 0.7152, 0.0722, 0, 0,
-        0.2126, 0.7152, 0.0722, 0, 0,
-        0.2126, 0.7152, 0.0722, 0, 0,
-        0, 0, 0, 1, 0,
-    ],
-    Gingham: [
-        2, 0, 0, 0, 0,
-        1, 1, 0, 0, 0,
-        0.5, 0, 1, 0, 0,
-        0, 0, 0, 1, 0,
-    ],
-    Mayfair: [
-        1, 1, 0.5, 0, 0,
-        0, 0.5, 1, 0, 0,
-        0.5, 0.5, 1, 0, 0,
-        0, 0, 0, 1, 0,
-    ],
-    Valencia: [
-        1, 0, 0, 0, 0,
-        -0.2, 1, 0, 0, 0,
-        -0.8, 1.6, 1, 0, 0,
-        0, 0, 0, 1, 0,
-    ],
-}
+const filters = [
+    {
+        name: "Normal",
+        matrix: [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ],
+        offset: [0, 0, 0, 0]
+    },
+    {
+        name: "Juno",
+        matrix: [
+            1, -0.4, 0, 0,
+            0, 1.3, 0, 0,
+            0, -0.4, 1, 0,
+            0, 0.2, 0, 1,
+        ],
+        offset: [0, -0.1, 0, 0]
+    },
+    {
+        name: "Sepia",
+        matrix: [
+            0.393, 0.349, 0.272, 0,
+            0.769, 0.686, 0.534, 0,
+            0.189, 0.168, 0.131, 0,
+            0, 0, 0, 1
+        ],
+        offset: [0, 0, 0, 0]
+    },
+    {
+        name: "Grayscale",
+        matrix: [
+            0.216, 0.216, 0.216, 0,
+            0.7152, 0.7152, 0.7152, 0,
+            0.0722, 0.0722, 0.0722, 0,
+            0, 0, 0, 1
+        ],
+        offset: [0, 0, 0, 0]
+    },
+    {
+        name: "Gingham",
+        matrix: [
+            2, 1, 0.5, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ],
+        offset: [0, 0, 0, 0]
+    },
+    {
+        name: "Mayfair",
+        matrix: [
+            1, 0, 0.5, 0,
+            1, 0.5, 0.5, 0,
+            0.5, 1, 1, 0,
+            0, 0, 0, 1
+        ],
+        offset: [0, 0, 0, 0]
+    },
+    {
+        name: "Valencia",
+        matrix: [
+            1, -0.2, -0.8, 0,
+            0, 1, 1.6, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ],
+        offset: [0, 0, 0, 0]
+    },
+]
 
 export default function FiltersBox(props) {
     const { title, sheetRef } = props
     const [selectedFilter, setSelectedFilter] = useState("Normal")
 
+    const dispatch = useDispatch()
+
     const handleClose = () => {
+        dispatch(setColorMatrix([
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ]))
+        dispatch(setColorOffset([0, 0, 0, 0]))
+        setSelectedFilter("Normal")
+        sheetRef.current?.close()
+    }
+
+    const handleCheck = () => {
         sheetRef.current?.close()
     }
 
     const handlePress = (item) => {
-        setSelectedFilter(item.item)
+        setSelectedFilter(item.name)
+        dispatch(setColorMatrix(item.matrix))
+        dispatch(setColorOffset(item.offset))
     }
-
-
-    const img = useImage(require("../../assets/photo.jpeg"))
-    if (img === null) return null;
 
     return (
         <View style={styles.container}>
@@ -77,66 +121,40 @@ export default function FiltersBox(props) {
                 </TouchableOpacity>
                 <Text style={styles.title}>{title}</Text>
                 <TouchableOpacity
-                    // onPress={handleCheck}
+                    onPress={handleCheck}
                 >
                     <CheckSVG />
                 </TouchableOpacity>
             </View>
 
-            <View style={[styles.bottom]}>
-                <FlatList
-                    horizontal
-                    data={Object.keys(filters)}
-                    ItemSeparatorComponent={() => (<View style={{ marginHorizontal: 5 }}></View>)}
-                    keyExtractor={(_, index) => index}
-                    style={styles.container}
-                    contentContainerStyle={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}
-                    renderItem={(item) => (
-                        <TouchableWithoutFeedback
-                            onPress={() => handlePress(item)}
-                        >
-                            <View style={styles.itemWrap}>
-                                <Canvas style={{ width: 50, height: 55 }}>
-                                    {img &&
-                                        <Image
-                                            x={0}
-                                            y={0}
-                                            fit={"contain"}
-                                            width={45}
-                                            height={55}
-                                            image={img}
-                                        >
-                                            <ColorMatrix matrix={filters[item.item]} />
-                                        </Image>
-                                    }
-                                </Canvas>
-                                <Text style={[
-                                    styles.textItem,
-                                    selectedFilter === item.item && styles.selectedItem
-                                ]}
-                                >
-                                    {item.item}
-                                </Text>
-                                {/* <Image
-                                style={styles.img}
-                                image={img}
-                            />
+            <ScrollView horizontal contentContainerStyle={styles.contentContainer}>
+                {filters.map((item, index) => (
+                    <TouchableWithoutFeedback
+                        key={index}
+                        onPress={() => handlePress(item)}
+                    >
+                        <View style={styles.itemWrap}>
+                            <Surface
+                                style={{ width: 45, height: 55 }}
+                            >
+                                <ColorMatrix matrix={item.matrix} offset={item.offset}>
+                                    <GLImage
+                                        resizeMode='contain'
+                                        source={img}
+                                    />
+                                </ColorMatrix>
+                            </Surface>
                             <Text style={[
                                 styles.textItem,
-                                selectedFilter === item.item.toLowerCase() && styles.selectedItem
+                                selectedFilter === item.name && styles.selectedItem
                             ]}
                             >
-                                {item.item}
-                            </Text> */}
-                            </View>
-                        </TouchableWithoutFeedback>
-                    )}
-                />
-            </View>
+                                {item.name}
+                            </Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                ))}
+            </ScrollView>
         </View>
 
     )
@@ -158,12 +176,11 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 17,
     },
-    bottom: {
-        flex: 1,
-        justifyContent: "space-evenly",
+
+    contentContainer: {
+        display: "flex",
         alignItems: "center"
     },
-
     img: {
         width: 45,
         height: 55

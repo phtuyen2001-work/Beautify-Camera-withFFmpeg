@@ -4,13 +4,12 @@ import Slider from '@react-native-community/slider'
 import CloseSVG from '../../SVG/CloseSVG'
 import CheckSVG from '../../SVG/CheckSVG'
 import { useDispatch } from 'react-redux'
-import { setContrast, setSaturation, setBrightness, setBlur } from '../../../redux/slice/canvasSlice'
+import { setContrast, setSaturation, setBrightness, setBlur, setNegative, setFlyeye } from '../../../redux/slice/canvasSlice'
 
 const SliderBox = (props) => {
     const { sheetRef, title, minimumValue=0, maximumValue=2, step=0.05, initialValue=1 } = props
 
     const dispatch = useDispatch()
-
     //to show value under the slider
     const [value, setValue] = useState(initialValue)
     const handleValueChange = (e) => {
@@ -22,18 +21,30 @@ const SliderBox = (props) => {
     }
 
     const handleCheck = () => {
-        switch (title.toLowerCase()) {
+        switch (title) {
+            // set contrast
             case 'contrast':
                 dispatch(setContrast(value))
                 break;
+            // set saturation
             case 'saturation':
                 dispatch(setSaturation(value))
                 break;
+            // set brightness
             case 'brightness':
                 dispatch(setBrightness(value))
                 break;
+            // set blur
             case 'blur':
                 dispatch(setBlur(value))
+                break;
+            // set negative
+            case "negative":
+                dispatch(setNegative(value))
+                break;
+            // set flyeye
+            case "flyeye":
+                dispatch(setFlyeye(value))
                 break;
         }
         sheetRef.current?.close()
@@ -42,15 +53,11 @@ const SliderBox = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.top}>
-                <TouchableOpacity
-                    onPress={handleClose}
-                >
+                <TouchableOpacity onPress={handleClose}>
                     <CloseSVG />
                 </TouchableOpacity>
-                <Text style={styles.title}>{title}</Text>
-                <TouchableOpacity
-                    onPress={handleCheck}
-                >
+                <Text style={styles.title}>{title.toUpperCase()}</Text>
+                <TouchableOpacity onPress={handleCheck}>
                     <CheckSVG />
                 </TouchableOpacity>
             </View>

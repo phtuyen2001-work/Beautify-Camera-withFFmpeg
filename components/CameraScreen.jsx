@@ -94,7 +94,6 @@ export default function CameraScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      {console.log(recordTime)}
       {/* Camera component and Gesture handler*/}
       <CameraComponent
         type={camType}

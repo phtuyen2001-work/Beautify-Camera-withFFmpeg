@@ -30,7 +30,6 @@ const EditScreen = ({ route, navigation }) => {
     useEffect(() => {
         (async () => {
             const file = route.params
-            console.log(file)
 
             if (file.type === "image") {
                 //resize the selected image before displaying it to the screen

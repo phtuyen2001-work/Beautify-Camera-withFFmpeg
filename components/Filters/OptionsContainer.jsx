@@ -4,12 +4,13 @@ import EditsContainer from './EditsContainer'
 import SliderBox from './slider/SliderBox'
 
 const OptionsContainer = (props) => {
-    const { } = props
-
     const contrastRef = useRef()
     const saturationRef = useRef()
     const brightnessRef = useRef()
     const blurRef = useRef()
+    const negativeRef = useRef()
+    const flyeyeRef = useRef()
+    const hueRotateRef = useRef()
     const options = useMemo(() => ([
         {
             title: "Contrast",
@@ -26,7 +27,15 @@ const OptionsContainer = (props) => {
         {
             title: "Blur",
             ref: blurRef
-        }
+        },
+        {
+            title: "Negative",
+            ref: negativeRef
+        },
+        {
+            title: "Flyeye",
+            ref: flyeyeRef
+        },
     ]), [])
 
 
@@ -35,11 +44,14 @@ const OptionsContainer = (props) => {
     }
 
     useEffect(() => {
+        //To set the modals to "ready" state
         contrastRef.current?.present()
         saturationRef.current?.present()
         brightnessRef.current?.present()
         blurRef.current?.present()
-    }, [contrastRef, saturationRef, brightnessRef, blurRef])
+        negativeRef.current?.present()
+        flyeyeRef.current?.present()
+    }, [contrastRef, saturationRef, brightnessRef, blurRef, negativeRef, flyeyeRef])
 
     return (
         <>
@@ -67,32 +79,61 @@ const OptionsContainer = (props) => {
                 </ScrollView>
             </View>
 
-            <EditsContainer
-                sheetRef={contrastRef}
-            >
-                <SliderBox title="Contrast" />
+            <EditsContainer sheetRef={contrastRef}>
+                <SliderBox
+                    initialValue={1}
+                    minimumValue={0}
+                    maximumValue={4}
+                    step={0.1}
+                    title="contrast"
+                />
             </EditsContainer>
 
-            <EditsContainer
-                sheetRef={saturationRef}
-            >
-                <SliderBox title="Saturation" />
+            <EditsContainer sheetRef={saturationRef}>
+                <SliderBox
+                    initialValue={1}
+                    minimumValue={0}
+                    maximumValue={10}
+                    step={0.1}
+                    title="saturation"
+                />
             </EditsContainer>
 
-            <EditsContainer
-                sheetRef={brightnessRef}
-            >
-                <SliderBox title="Brightness" />
+            <EditsContainer sheetRef={brightnessRef}>
+                <SliderBox
+                    initialValue={1}
+                    minimumValue={0}
+                    maximumValue={4}
+                    step={0.1}
+                    title="brightness"
+                />
             </EditsContainer>
 
-            <EditsContainer
-                sheetRef={blurRef}
-            >
+            <EditsContainer sheetRef={blurRef}>
                 <SliderBox
                     initialValue={0}
                     minimumValue={0}
                     maximumValue={6}
-                    title="Blur"
+                    title="blur"
+                />
+            </EditsContainer>
+
+            <EditsContainer sheetRef={negativeRef}>
+                <SliderBox
+                    initialValue={0}
+                    minimumValue={0}
+                    maximumValue={1}
+                    title="negative"
+                />
+            </EditsContainer>
+
+            <EditsContainer sheetRef={flyeyeRef}>
+                <SliderBox
+                    step={0.1}
+                    initialValue={0}
+                    minimumValue={0}
+                    maximumValue={1}
+                    title="flyeye"
                 />
             </EditsContainer>
         </>

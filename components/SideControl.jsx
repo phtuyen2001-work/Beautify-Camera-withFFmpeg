@@ -9,6 +9,7 @@ import { resetCanvas } from '../redux/slice/canvasSlice';
 
 const SideControl = (props) => {
     const navigation = useNavigation();
+
     const dispatch = useDispatch()
 
     const [previewImg, setPreviewImg] = useState(() => getPreviewPhoto())

@@ -13,7 +13,9 @@ export const canvasSlice = createSlice({
         contrast: 1,
         saturation: 1,
         brightness: 1,
-        blur: 0
+        blur: 0,
+        negative: 0,
+        flyeye: 0,
     },
     reducers: {
         setContrast: (state, action) => {
@@ -34,6 +36,12 @@ export const canvasSlice = createSlice({
         setColorOffset: (state, action) => {
             state.offset = action.payload
         },
+        setNegative: (state, action) => {
+            state.negative = action.payload
+        },
+        setFlyeye: (state, action) => {
+            state.flyeye = action.payload
+        },
         resetCanvas: (state) => {
             state.matrix = [
                 1, 0, 0, 0,
@@ -46,13 +54,18 @@ export const canvasSlice = createSlice({
             state.saturation = 1
             state.brightness = 1
             state.blur = 0
+            state.negative = 0
+            state.flyeye = 0
         }
     }
 });
 
 export const {
     setColorMatrix, setColorOffset,
-    setContrast, setSaturation, setBrightness, setBlur,
+    setContrast, setSaturation, setBrightness, 
+    setBlur,
+    setNegative,
+    setFlyeye,
     resetCanvas
 } = canvasSlice.actions
 

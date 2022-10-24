@@ -21,7 +21,7 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 const EditScreen = ({ route, navigation }) => {
     const [selected, setSeleted] = useState(null)
 
-    const imgRef = useRef()
+    const surfaceRef = useRef()
 
     const videoRef = useRef()
 
@@ -61,7 +61,7 @@ const EditScreen = ({ route, navigation }) => {
         let uri;
 
         if (route.params.type === "image") {
-            uri = await captureRef(imgRef)
+            uri = await captureRef(surfaceRef)
 
         }
         else {
@@ -87,7 +87,7 @@ const EditScreen = ({ route, navigation }) => {
             <View style={[styles.surfaceContainer]}>
                 {route.params.type === "image" ? (
                     <Surface
-                        ref={imgRef}
+                        ref={surfaceRef}
                         style={{ width: windowWidth, height: windowHeight }}
                     >
                         <Effects>
@@ -101,7 +101,6 @@ const EditScreen = ({ route, navigation }) => {
                     <View>
                         <VideoComponent
                             videoRef={videoRef}
-
                             isLooping={true}
                             resizeMode='contain'
                             source={{ uri: selected?.uri }}
@@ -114,9 +113,7 @@ const EditScreen = ({ route, navigation }) => {
                 )}
             </View>
 
-            <FiltersControl
-                stay={true}
-            />
+            <FiltersControl />
         </View>
     )
 }

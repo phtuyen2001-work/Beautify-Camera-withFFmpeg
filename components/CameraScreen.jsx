@@ -1,28 +1,62 @@
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CameraComponent from './CameraComponent';
-import SwitchSVG from './SVG/SwitchSVG';
-import { CameraType } from 'expo-camera';
 import SideControl from './SideControl';
-import FiltersControl from './FiltersControl';
 import { showToast } from './CustomToast';
+import { useDispatch } from 'react-redux';
+import * as ImagePicker from "expo-image-picker"
+import { resetCanvas } from '../redux/slice/canvasSlice';
+import * as MediaLibrary from 'expo-media-library';
+
+// import { Surface } from 'gl-react-expo';
+// import Effects from './Effects/Effects';
+
+// import * as MediaLibrary from 'expo-media-library';
+// import { captureRef } from 'react-native-view-shot';
+// import GLCamera from './GLCamera';
+
 
 export default function CameraScreen({ navigation }) {
-  //To switch the camera type: front / back
-  const [camType, setCamType] = useState(CameraType.back)
+  const dispatch = useDispatch()
+
   // To switch camera mode: photo / video
   const [cameraMode, setCameraMode] = useState("photo")
   // To indicate the recording state
   const [isRecording, setIsRecording] = useState(false)
   // To indicate the recording time
   const [recordTime, setRecordTime] = useState(0)
+  //To get the preview image  
+  const [previewImg, setPreviewImg] = useState(() => getPreviewPhoto())
 
   const camera = useRef()
-  const filtersControl = useRef()
 
-  // const [isFiltersUp, setIsFiltersUp] = useState(-1)
-  const handleOpenFilters = () => {
-    filtersControl.current?.snapToIndex(0)
+
+  //Get the newest photo for previewPhoto view
+  async function getPreviewPhoto() {
+      let arrAssets = await MediaLibrary.getAssetsAsync({
+          sortBy: "creationTime",
+          mediaType: ["photo"]
+      })
+      let assetWithID = await MediaLibrary.getAssetInfoAsync(arrAssets.assets[0].id)
+      setPreviewImg(assetWithID)
+  }
+
+  //To open the user's media library
+  const openImagePicker = async () => {
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All
+    })
+
+    if (!pickerResult.cancelled) {
+      //reset canvas before navigating to the EditScreen
+      dispatch(resetCanvas())
+      // console.log(pickerResult)
+      navigation.navigate("EditScreen", { ...pickerResult })
+    }
+  }
+
+  const handleOpenGLScreen = () => {
+    navigation.navigate("GLScreen")
   }
 
   // To stop recording when switch to photo mode without stopping the record first
@@ -35,8 +69,8 @@ export default function CameraScreen({ navigation }) {
 
   // To convert the recording time
   const convertTime = (time) => {
-    let minute = Math.floor(time/60)
-    let second = time%60
+    let minute = Math.floor(time / 60)
+    let second = time % 60
 
     return `${minute.toLocaleString('en', {
       minimumIntegerDigits: 2,
@@ -46,22 +80,14 @@ export default function CameraScreen({ navigation }) {
     })}`
   }
 
-  //Flip the camera type (back and front)
-  const flipCameraType = () => {
-    setCamType((current) => (
-      current === CameraType.back ? CameraType.front : CameraType.back
-    ))
-  }
-
   //To take photo with camera
   const takePhoto = async () => {
     if (!camera) return
     const photo = await camera.current.takePictureAsync()
+    // let uri = await captureRef(surfaceRef)
     showToast("Clicked")
 
-    // console.log(photo)
     navigation.navigate("EditScreen", { ...photo, type: "image" })
-    // MediaLibrary.saveToLibraryAsync(photo.uri)
   }
 
   const handleStartRecord = async () => {
@@ -92,76 +118,89 @@ export default function CameraScreen({ navigation }) {
     showToast("Stop recording!")
   }
 
+  //Switch the camera mode (photo and video)
+  const switchMode = (btnPressed) => {
+    if (cameraMode === "photo") {
+      if (btnPressed === "video") setCameraMode("video")
+      else return
+    }
+    else {
+      if (btnPressed === "photo") setCameraMode("photo")
+      else return
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       {/* Camera component and Gesture handler*/}
-      <CameraComponent
-        type={camType}
-        cameraRef={camera}
-      >
-        <View style={styles.topView}>
+      <CameraComponent cameraRef={camera} />
+
+      <View style={styles.actionContainer}>
+        <SideControl
+          leftBtnFunc={openImagePicker}
+          rightBtnFunc={handleOpenGLScreen}
+          previewImg={previewImg}
+        >
+          {cameraMode === "photo" ?
+            <TouchableOpacity
+              style={styles.actionBtn}
+              onPress={takePhoto}
+            >
+              <View style={styles.inner}></View>
+            </TouchableOpacity>
+            :
+            <View>
+              <TouchableOpacity
+                onPress={handleStartRecord}
+                style={[styles.actionBtn, { display: isRecording ? "none" : "flex" }]}
+              >
+                <View style={styles.innerWhite}>
+                  <View style={styles.innerRed}></View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={handleStopRecord}
+                style={[styles.actionBtn, { display: isRecording ? "flex" : "none" }]}
+              >
+                <View style={styles.innerWhite}>
+                  <View style={styles.innerSquare}>
+                    <Text style={{ fontSize: 12 }}>{convertTime(recordTime)}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          }
+        </SideControl>
+
+        <View style={styles.switchBtns}>
           <TouchableOpacity
-            onPress={flipCameraType}
+            onPress={() => switchMode("photo")}
+            style={[styles.modeView, cameraMode === "photo" ? styles.selectedView : null]}
           >
-            <SwitchSVG />
+            <Text style={[{ fontWeight: "700" }, cameraMode === "photo" ? styles.selectedViewText : null]}>Photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => switchMode("video")}
+            style={[styles.modeView, cameraMode === "video" ? styles.selectedView : null]}
+          >
+            <Text style={[{ fontWeight: "700" }, cameraMode === "video" ? styles.selectedViewText : null]}>Video</Text>
           </TouchableOpacity>
         </View>
-      </CameraComponent>
-
-      <SideControl
-        cameraMode={cameraMode}
-        setCameraModeFunc={setCameraMode}
-        openFiltersFunc={handleOpenFilters}
-      >
-        {cameraMode === "photo" ?
-          <TouchableOpacity
-            style={styles.actionBtn}
-            onPress={takePhoto}
-          >
-            <View style={styles.inner}></View>
-          </TouchableOpacity>
-          :
-          <View>
-            <TouchableOpacity
-              onPress={handleStartRecord}
-              style={[styles.actionBtn, { display: isRecording ? "none" : "flex" }]}
-            >
-              <View style={styles.innerWhite}>
-                <View style={styles.innerRed}></View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={handleStopRecord}
-              style={[styles.actionBtn, { display: isRecording ? "flex" : "none" }]}
-            >
-              <View style={styles.innerWhite}>
-                <View style={styles.innerSquare}>
-                  <Text style={{ fontSize: 12 }}>{convertTime(recordTime)}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
-        }
-      </SideControl>
-
-      <FiltersControl
-        filtersControlRef={filtersControl}
-      />
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  topView: {
-    top: 10,
-    right: 10,
-    backgroundColor: "rgba(00,00,00, 0.0)",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-end",
+  actionContainer: {
+    height: "20%",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: "center",
+    bottom: 0,
+    left: 0,
   },
-
 
   actionBtn: {
     backgroundColor: "#B1E4E7",
@@ -177,8 +216,6 @@ const styles = StyleSheet.create({
     width: 55,
     height: 55,
     borderRadius: 90,
-    // borderColor: "#fff",
-    // borderWidth: 8
   },
   innerWhite: {
     backgroundColor: "#fff",
@@ -194,8 +231,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 90,
-    // borderColor: "#fff",
-    // borderWidth: 5,
   },
   innerSquare: {
     backgroundColor: "#f08080",
@@ -205,5 +240,25 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
+  },
+
+  switchBtns: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingBottom: 5
+  },
+  modeView: {
+    marginHorizontal: 10,
+  },
+  selectedView: {
+    backgroundColor: "#000",
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    borderRadius: 90,
+    textAlign: "center"
+  },
+  selectedViewText: {
+    color: "#fff",
   },
 })

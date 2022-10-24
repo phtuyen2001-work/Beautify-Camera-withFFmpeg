@@ -9,6 +9,9 @@ import CameraScreen from './components/CameraScreen';
 import AnimatedAppLoader from './components/SplashScreen/AnimatedAppLoader';
 import { store } from "./redux/store"
 import { RootSiblingParent } from 'react-native-root-siblings';
+import "webgltexture-loader-expo-camera";
+import GLScreen from './components/GLScreen';
+// import "webgltexture-loader-expo"
 
 const Stack = createNativeStackNavigator()
 
@@ -32,7 +35,10 @@ function Main() {
             <Stack.Screen
               name='EditScreen'
               component={EditScreen}
-
+            />
+            <Stack.Screen 
+              name='GLScreen'
+              component={GLScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>
@@ -42,7 +48,6 @@ function Main() {
 }
 
 export default function App() {
-
   const image = {
     uri: require("./assets/splash.png")
   }

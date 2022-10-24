@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import EditsContainer from './Filters/EditsContainer'
 import FilterSVG from './SVG/FilterSVG'
@@ -8,26 +8,24 @@ import FiltersBox from './Filters/FiltersBox'
 import OptionsContainer from './Filters/OptionsContainer'
 
 const FiltersControl = (props) => {
-    //props.stay to indicate whether this FiltersControl be able to close completely
-    const { stay, filtersControlRef } = props
+    const { filtersControlRef } = props
 
-    const snapPoints = useMemo(
-        () => stay ? ["5%", "20%"] : ["20%"], [])
+    const snapPoints = useMemo(() => ["5%", "20%"], [])
 
     const filterRef = useRef()
     const optionRef = useRef()
+    //TODO: useCallBack ?
     const handleOpenSheetModal = (ref) => {
         ref.current?.snapToIndex(0)
     }
 
-
     return (
         <>
             <BottomSheet
-                index={stay ? 0 : -1}
+                index={0}
                 ref={filtersControlRef}
                 snapPoints={snapPoints}
-                enablePanDownToClose={stay ? false : true}
+                enablePanDownToClose={false}
                 backgroundStyle={{
                     backgroundColor: "#000",
                     borderRadius: 0
@@ -53,15 +51,10 @@ const FiltersControl = (props) => {
                         <Text style={styles.btnText}>Options</Text>
                     </TouchableOpacity>
                 </View>
-
             </BottomSheet>
 
-            <EditsContainer
-                sheetRef={filterRef}
-            >
-                <FiltersBox
-                    title="Filter"
-                />
+            <EditsContainer sheetRef={filterRef}>
+                <FiltersBox title="Filter" />
             </EditsContainer>
 
             <BottomSheet
@@ -84,14 +77,6 @@ const FiltersControl = (props) => {
 }
 
 const styles = StyleSheet.create({
-    // container: {
-    //     height: "25%",
-    //     width: "100%",
-    //     backgroundColor: "#000",
-    //     position: "absolute",
-    //     bottom: 0,
-    //     left: 0,
-    // },
     btnsView: {
         flex: 1,
         flexDirection: 'row',

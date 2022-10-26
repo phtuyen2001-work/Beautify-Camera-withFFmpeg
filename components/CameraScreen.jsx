@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CameraComponent from './CameraComponent';
 import SideControl from './SideControl';
@@ -7,14 +7,7 @@ import { useDispatch } from 'react-redux';
 import * as ImagePicker from "expo-image-picker"
 import { resetCanvas } from '../redux/slice/canvasSlice';
 import * as MediaLibrary from 'expo-media-library';
-
-// import { Surface } from 'gl-react-expo';
-// import Effects from './Effects/Effects';
-
-// import * as MediaLibrary from 'expo-media-library';
-// import { captureRef } from 'react-native-view-shot';
-// import GLCamera from './GLCamera';
-
+import CameraAltSVG from './SVG/CameraAltSVG';
 
 export default function CameraScreen({ navigation }) {
   const dispatch = useDispatch()
@@ -33,12 +26,12 @@ export default function CameraScreen({ navigation }) {
 
   //Get the newest photo for previewPhoto view
   async function getPreviewPhoto() {
-      let arrAssets = await MediaLibrary.getAssetsAsync({
-          sortBy: "creationTime",
-          mediaType: ["photo"]
-      })
-      let assetWithID = await MediaLibrary.getAssetInfoAsync(arrAssets.assets[0].id)
-      setPreviewImg(assetWithID)
+    let arrAssets = await MediaLibrary.getAssetsAsync({
+      sortBy: "creationTime",
+      mediaType: ["photo"]
+    })
+    let assetWithID = await MediaLibrary.getAssetInfoAsync(arrAssets.assets[0].id)
+    setPreviewImg(assetWithID)
   }
 
   //To open the user's media library
@@ -85,7 +78,7 @@ export default function CameraScreen({ navigation }) {
     if (!camera) return
     const photo = await camera.current.takePictureAsync()
     // let uri = await captureRef(surfaceRef)
-    showToast("Clicked")
+    showToast("Clicked!")
 
     navigation.navigate("EditScreen", { ...photo, type: "image" })
   }
@@ -137,9 +130,23 @@ export default function CameraScreen({ navigation }) {
 
       <View style={styles.actionContainer}>
         <SideControl
+          leftBtn={
+            <Image
+              style={{ width: 45, height: 45, borderRadius: 5, }}
+              source={{ uri: previewImg ? previewImg.localUri : "../assets/photo.jpeg" }}
+            />
+          }
           leftBtnFunc={openImagePicker}
           rightBtnFunc={handleOpenGLScreen}
-          previewImg={previewImg}
+          rightBtn={
+            <View style={{
+              borderWidth: 2,
+              borderColor: "#000",
+              borderRadius: 8,
+            }}>
+              <CameraAltSVG />
+            </View>
+          }
         >
           {cameraMode === "photo" ?
             <TouchableOpacity

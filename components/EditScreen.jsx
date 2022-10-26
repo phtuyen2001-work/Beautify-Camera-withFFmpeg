@@ -34,7 +34,7 @@ const EditScreen = ({ route, navigation }) => {
             if (file.type === "image") {
                 //resize the selected image before displaying it to the screen
                 const manipResult = await manipulateAsync(
-                    file.uri,
+                    file.uri ,
                     [{ resize: { width: windowWidth } }]
                 )
                 setSeleted(manipResult)

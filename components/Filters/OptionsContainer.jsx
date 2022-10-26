@@ -10,7 +10,6 @@ const OptionsContainer = (props) => {
     const blurRef = useRef()
     const negativeRef = useRef()
     const flyeyeRef = useRef()
-    const hueRotateRef = useRef()
     const options = useMemo(() => ([
         {
             title: "Contrast",
@@ -42,16 +41,6 @@ const OptionsContainer = (props) => {
     const handleOpenSheetModal = (ref) => {
         ref.current?.snapToIndex(0)
     }
-
-    useEffect(() => {
-        //To set the modals to "ready" state
-        contrastRef.current?.present()
-        saturationRef.current?.present()
-        brightnessRef.current?.present()
-        blurRef.current?.present()
-        negativeRef.current?.present()
-        flyeyeRef.current?.present()
-    }, [contrastRef, saturationRef, brightnessRef, blurRef, negativeRef, flyeyeRef])
 
     return (
         <>

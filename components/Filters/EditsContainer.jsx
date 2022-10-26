@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useEffect } from 'react'
 
 const EditsContainer = (props) => {
@@ -7,6 +7,11 @@ const EditsContainer = (props) => {
 
     useEffect(() => {
         sheetRef.current?.present()
+
+        return () => {
+            console.log("dismiss");
+            sheetRef.current?.dismiss()
+        }
     }, [sheetRef])
 
     const snapPoints = useMemo(() => ["23%"], [])

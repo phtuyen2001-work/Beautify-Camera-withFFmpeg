@@ -8,9 +8,9 @@ import FiltersBox from './Filters/FiltersBox'
 import OptionsContainer from './Filters/OptionsContainer'
 
 const FiltersControl = (props) => {
-    const { filtersControlRef } = props
+    const { filtersControlRef, stay=true } = props
 
-    const snapPoints = useMemo(() => ["5%", "20%"], [])
+    const snapPoints = useMemo(() => stay ? ["5%", "20%"] : ["20%"], [])
 
     const filterRef = useRef()
     const optionRef = useRef()
@@ -22,10 +22,10 @@ const FiltersControl = (props) => {
     return (
         <>
             <BottomSheet
-                index={0}
+                index={stay ? 0 : -1}
                 ref={filtersControlRef}
                 snapPoints={snapPoints}
-                enablePanDownToClose={false}
+                enablePanDownToClose={stay ? false : true}
                 backgroundStyle={{
                     backgroundColor: "#000",
                     borderRadius: 0

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect, useMemo, useReducer } from 'react'
 import { GLSL, Node, Shaders } from 'gl-react';
 import CameraComponent from './CameraComponent';
 
@@ -15,7 +15,7 @@ const shader = Shaders.create({
 })
 
 const GLCamera = (props) => {
-    const { cameraRef } = props
+    const cameraRef = useMemo(() => props.cameraRef, [])
 
     // force update tricks for functional components
     const [ignored, forceUpdate] = useReducer(x => x + 1, 0)

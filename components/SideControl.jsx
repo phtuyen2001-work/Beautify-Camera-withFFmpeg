@@ -1,37 +1,36 @@
-import React, { useState } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import EditSVG from './SVG/EditSVG';
-
+import React from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 const SideControl = (props) => {
-    const { leftBtnFunc, rightBtnFunc, previewImg } = props
+    const { leftBtn, leftBtnFunc, 
+        rightBtn, rightBtnFunc, 
+         
+    } = props
 
     return (
         <View style={styles.btnContainer}>
-            <View style={styles.cameraBtns}>
+            <View style={styles.btnsAlign}>
                 <TouchableOpacity
                     // style={styles}
                     onPress={leftBtnFunc}
                 >
-                    <Image
+                    {/* <Image
                         style={styles.libraryImg}
                         source={{
                             uri: previewImg ? previewImg.localUri : "../assets/photo.jpeg"
                         }}
-                    />
+                    /> */}
+                    {leftBtn}
                 </TouchableOpacity>
 
                 {/* Main action camera button */}
                 {props.children}
 
                 <TouchableOpacity
-                    style={styles.sideBtn}
+                    // style={styles.sideBtn}
                     onPress={rightBtnFunc}
                 >
-                    <EditSVG
-                        width={32}
-                        height={32}
-                    />
+                    {rightBtn}
                 </TouchableOpacity>
             </View>
         </View>
@@ -41,9 +40,9 @@ const SideControl = (props) => {
 const styles = StyleSheet.create({
     btnContainer: {
         flex: 1, 
-        justifyContent: "center"
+        justifyContent: "center",
     },
-    cameraBtns: {
+    btnsAlign: {
         width: "100%",
         display: "flex",
         flexDirection: "row",
@@ -51,12 +50,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-evenly"
     },
 
-    sideBtn: {
-        borderWidth: 2,
-        borderColor: "#000",
-        borderRadius: 8,
-        padding: 3,
-    },
     libraryImg: {
         width: 45,
         height: 45,

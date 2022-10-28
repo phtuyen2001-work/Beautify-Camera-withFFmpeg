@@ -7,14 +7,9 @@ const EditsContainer = (props) => {
 
     useEffect(() => {
         sheetRef.current?.present()
+    }, [])
 
-        return () => {
-            console.log("dismiss");
-            sheetRef.current?.dismiss()
-        }
-    }, [sheetRef])
-
-    const snapPoints = useMemo(() => ["23%"], [])
+    const snapPoints = useMemo(() => ["20%"], [])
 
     //clone chilren for parent to pass props/functions to them
     const childrenWithProps = React.Children.map(children, child => {
@@ -29,9 +24,11 @@ const EditsContainer = (props) => {
         <BottomSheetModal
             stackBehavior='push'
             enableDismissOnClose={false}
+
+            onDismiss={() => console.log("dismissed")}
+
             index={-1}
             ref={sheetRef}
-
             snapPoints={snapPoints}
             enablePanDownToClose={false}
             handleComponent={null}

@@ -7,8 +7,9 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import FiltersBox from './Filters/FiltersBox'
 import OptionsContainer from './Filters/OptionsContainer'
 
+
 const FiltersControl = (props) => {
-    const { filtersControlRef, stay=true } = props
+    const { filtersControlRef, stay = true } = props
 
     const snapPoints = useMemo(() => stay ? ["5%", "20%"] : ["20%"], [])
 
@@ -53,9 +54,22 @@ const FiltersControl = (props) => {
                 </View>
             </BottomSheet>
 
-            <EditsContainer sheetRef={filterRef}>
-                <FiltersBox title="Filter" />
-            </EditsContainer>
+            <BottomSheet
+                ref={filterRef}
+                index={-1}
+                snapPoints={["23%"]}
+                enablePanDownToClose={false}
+                handleComponent={null}
+                backgroundStyle={{
+                    backgroundColor: "#000",
+                    borderRadius: 0
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: "#fff"
+                }}
+            >
+                <FiltersBox sheetRef={filterRef} title="Filter" />
+            </BottomSheet>
 
             <BottomSheet
                 ref={optionRef}

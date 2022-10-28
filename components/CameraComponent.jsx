@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import { Camera, CameraType } from 'expo-camera'
+import React, { useMemo, useState } from 'react'
+import { Camera, CameraType, FlashMode } from 'expo-camera'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import SwitchSVG from './SVG/SwitchSVG';
 
@@ -19,17 +19,25 @@ const CameraComponent = React.memo((props) => {
         ))
     }
 
-    //TODO: WORK ON PINCH GESTURE
-    // const pinch = Gesture.Pinch()
-    //     .onUpdate((e) => {
-    //         // console.log(e)
-    //     })
-    //     .onChange((e) => {
-    //         if (e.scale < 1 && zoom < 0.95) setZoom(zoom + 0.005)
-    //         else if (e.scale > 1 && zoom > 0.05) setZoom(zoom - 0.005)
-    //     })
+    const handleFlashMode = () => {
 
-    // const gesture = Gesture.Race(pinch)
+    }
+
+    //TODO: WORK ON PINCH GESTURE
+    const pinch = useMemo(() => Gesture.Pinch()
+        .runOnJS(true)
+        .onUpdate((e) => {
+            //TO DO
+            if (e.velocity > 0) setZoom(Math.min(zoom + 0.007, 1))
+            else if (e.velocity < 0) setZoom(Math.max(zoom - 0.007, 0))
+        })
+        .onFinalize((e) => {
+            if(zoom >= 1) setZoom(1)
+            else if (zoom <= 0) setZoom(0)
+        }),
+        [zoom])
+
+    const gesture = Gesture.Race(pinch)
 
     if (!permission) {
         return <View />
@@ -47,23 +55,27 @@ const CameraComponent = React.memo((props) => {
     }
 
     return (
-        // <GestureDetector
-        //     gesture={gesture}
-        // >
-        <Camera
-            style={[styles.camera, props.cameraStyle]}
-            ref={props.cameraRef}
-            type={camType}
-            zoom={zoom}
-            {...props}
+        <GestureDetector
+            gesture={gesture}
         >
-            <View style={styles.topView}>
-                <TouchableOpacity onPress={flipCameraType}>
-                    <SwitchSVG />
-                </TouchableOpacity>
-            </View>
-        </Camera>
-        // </GestureDetector>
+            <Camera
+                style={[styles.camera, props.cameraStyle]}
+                ref={props.cameraRef}
+                type={camType}
+                zoom={zoom}
+                {...props}
+            >
+                <View style={styles.topView}>
+                    <TouchableOpacity onPress={flipCameraType}>
+                        <SwitchSVG />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={handleFlashMode}>
+                        <SwitchSVG />
+                    </TouchableOpacity>
+                </View>
+            </Camera>
+        </GestureDetector>
     )
 })
 
@@ -74,10 +86,12 @@ const styles = StyleSheet.create({
         top: 10,
         right: 0,
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
+        flexDirection: "column",
+        alignItems: "flex-end",
         paddingRight: 10,
         width: "100%",
+
+        backgroundColor: "red"
     },
     camera: {
         flex: 1,

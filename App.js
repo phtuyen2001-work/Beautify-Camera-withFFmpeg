@@ -17,33 +17,31 @@ const Stack = createNativeStackNavigator()
 
 function Main() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <BottomSheetModalProvider>
       <StatusBar hidden />
-      <BottomSheetModalProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName='CameraScreen'
-            screenOptions={{
-              headerShown: false
-            }}
-          >
-            <Stack.Screen
-              name='CameraScreen'
-              component={CameraScreen}
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName='CameraScreen'
+          screenOptions={{
+            headerShown: false
+          }}
+        >
+          <Stack.Screen
+            name='CameraScreen'
+            component={CameraScreen}
 
-            />
-            <Stack.Screen
-              name='EditScreen'
-              component={EditScreen}
-            />
-            <Stack.Screen 
-              name='GLScreen'
-              component={GLScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+          />
+          <Stack.Screen
+            name='EditScreen'
+            component={EditScreen}
+          />
+          <Stack.Screen
+            name='GLScreen'
+            component={GLScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </BottomSheetModalProvider>
   )
 }
 
@@ -55,9 +53,11 @@ export default function App() {
   return (
     <AnimatedAppLoader image={image}>
       <Provider store={store}>
-        <RootSiblingParent>
-          <Main />
-        </RootSiblingParent>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <RootSiblingParent>
+            <Main />
+          </RootSiblingParent>
+        </GestureHandlerRootView>
       </Provider>
     </AnimatedAppLoader>
   );

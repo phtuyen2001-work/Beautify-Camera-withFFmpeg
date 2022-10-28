@@ -35,22 +35,20 @@ const GLScreen = (props) => {
         if (!cameraRef) return
         const uri = await captureRef(surfaceRef)
         showToast("Clicked!")
-        
+
         navigation.navigate("EditScreen", { uri, type: "image" })
     }
 
     return (
-        <>
-            <View style={styles.container}>
-                <Surface
-                    style={{ width: windowWidth, height: windowHeight }}
-                    ref={surfaceRef}
-                >
-                    <Effects>
-                        <GLCamera cameraRef={cameraRef} />
-                    </Effects>
-                </Surface>
-            </View>
+        <View style={styles.container}>
+            <Surface
+                style={{ width: windowWidth, height: windowHeight }}
+                ref={surfaceRef}
+            >
+                <Effects>
+                    <GLCamera cameraRef={cameraRef} />
+                </Effects>
+            </Surface>
 
             <BottomSheet
                 index={0}
@@ -91,7 +89,7 @@ const GLScreen = (props) => {
                 stay={false}
                 filtersControlRef={filtersControlRef}
             />
-        </>
+        </View>
     )
 }
 

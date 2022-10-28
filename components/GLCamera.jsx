@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useReducer } from 'react'
 import { GLSL, Node, Shaders } from 'gl-react';
-import CameraComponent from './CameraComponent';
+import { Camera, CameraType } from 'expo-camera';
 
 const shader = Shaders.create({
     YFlip: {
@@ -41,7 +41,11 @@ const GLCamera = (props) => {
                 t: () => props.cameraRef.current || null
             }}
         >
-            <CameraComponent cameraRef={cameraRef} />
+            <Camera
+                ref={cameraRef}
+                style={{ flex: 1 }}
+                type={CameraType.back}
+            />
         </Node>
     )
 }

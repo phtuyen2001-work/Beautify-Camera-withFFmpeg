@@ -10,11 +10,10 @@ import * as MediaLibrary from 'expo-media-library';
 import GLImage from "gl-react-image";
 import { Surface } from "gl-react-expo";
 import Effects from './Effects/Effects';
-
 import { captureRef } from 'react-native-view-shot';
+
 import VideoComponent from './VideoComponent';
 import { showToast } from './CustomToast';
-
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 
@@ -22,7 +21,6 @@ const EditScreen = ({ route, navigation }) => {
     const [selected, setSeleted] = useState(null)
 
     const surfaceRef = useRef()
-
     const videoRef = useRef()
 
     const dispatch = useDispatch()
@@ -34,7 +32,7 @@ const EditScreen = ({ route, navigation }) => {
             if (file.type === "image") {
                 //resize the selected image before displaying it to the screen
                 const manipResult = await manipulateAsync(
-                    file.uri ,
+                    file.uri,
                     [{ resize: { width: windowWidth } }]
                 )
                 setSeleted(manipResult)
@@ -68,7 +66,7 @@ const EditScreen = ({ route, navigation }) => {
             uri = videoRef.current.props.source.uri
         }
 
-        
+
         MediaLibrary.saveToLibraryAsync(uri)
 
         showToast("Save to library...")

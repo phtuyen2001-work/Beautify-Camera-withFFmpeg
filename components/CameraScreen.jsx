@@ -37,13 +37,14 @@ export default function CameraScreen({ navigation }) {
   //To open the user's media library
   const openImagePicker = async () => {
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
     })
 
     if (!pickerResult.cancelled) {
       //reset canvas before navigating to the EditScreen
       dispatch(resetCanvas())
-      // console.log(pickerResult)
+      // console.log(pickerResult);
+      // Image.getSize(pickerResult.uri, (w, h) => console.log(w, h))
       navigation.navigate("EditScreen", { ...pickerResult })
     }
   }

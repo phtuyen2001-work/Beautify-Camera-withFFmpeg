@@ -1,5 +1,5 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import React, { useState, useEffect, useRef } from 'react'
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import FiltersControl from './FiltersControl'
 import { useDispatch } from 'react-redux';
 import { resetCanvas } from '../redux/slice/canvasSlice';
@@ -15,19 +15,24 @@ import { captureRef } from 'react-native-view-shot';
 import VideoComponent from './VideoComponent';
 import { showToast } from './CustomToast';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
+const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 
 const EditScreen = ({ route, navigation }) => {
     const [selected, setSeleted] = useState(null)
 
+    const potentialHeight = useMemo(() => windowHeight * 0.95, [])
+
     const surfaceRef = useRef()
+    const viewRef = useRef()
     const videoRef = useRef()
+
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         (async () => {
             const file = route.params
+            // Image.getSize(file.uri, (w, h) => console.log(w, h))
 
             if (file.type === "image") {
                 //resize the selected image before displaying it to the screen
@@ -35,7 +40,9 @@ const EditScreen = ({ route, navigation }) => {
                     file.uri,
                     [{ resize: { width: windowWidth } }]
                 )
-                setSeleted(manipResult)
+                // console.log(manipResult);
+                Image.getSize(manipResult.uri, (w, h) => setSeleted({ ...manipResult, height: h }))
+
             }
             else if (file.type === "video") {
                 setSeleted(file)
@@ -44,6 +51,7 @@ const EditScreen = ({ route, navigation }) => {
                 return <View>ERROR</View>
             }
         })()
+
     }, [])
 
     const handleCancel = () => {
@@ -59,7 +67,7 @@ const EditScreen = ({ route, navigation }) => {
         let uri;
 
         if (route.params.type === "image") {
-            uri = await captureRef(surfaceRef)
+            uri = await captureRef(viewRef)
 
         }
         else {
@@ -82,20 +90,25 @@ const EditScreen = ({ route, navigation }) => {
                 <Text onPress={handleSave} style={styles.topText}>Save</Text>
             </View>
 
-            <View style={[styles.surfaceContainer]}>
-                {route.params.type === "image" ? (
-                    <Surface
-                        ref={surfaceRef}
-                        style={{ width: windowWidth, height: windowHeight }}
-                    >
-                        <Effects>
-                            <GLImage
-                                resizeMode='contain'
-                                source={{ uri: selected?.uri }}
-                            />
-                        </Effects>
-                    </Surface>
-                ) : (
+            <View style={[styles.content]}>
+                {route.params.type === "image" ? (selected && (
+                    <View style={[styles.surfaceContainer]} ref={viewRef}>
+                        <Surface
+                            ref={surfaceRef}
+                            style={{ 
+                                width: windowWidth, 
+                                height: selected.height > potentialHeight ? potentialHeight : selected.height
+                            }}
+                        >
+                            <Effects>
+                                <GLImage
+                                    resizeMode='stretch'
+                                    source={{ uri: selected?.uri }}
+                                />
+                            </Effects>
+                        </Surface>
+                    </View>
+                )) : (
                     <View>
                         <VideoComponent
                             videoRef={videoRef}
@@ -122,7 +135,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#000"
     },
     top: {
-        height: "5%",
+        height: (windowHeight * 0.05),
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
@@ -134,11 +147,18 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         color: "#fff"
     },
-    surfaceContainer: {
+    content: {
         flex: 1,
         justifyContent: "center",
         zIndex: -1,
     },
+    surfaceContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        maxHeight: windowHeight*0.95,
+        // backgroundColor: "rgba(0, 0, 0, 0.0)",
+    }
 })
 
 export default EditScreen

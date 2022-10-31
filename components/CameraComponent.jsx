@@ -3,11 +3,16 @@ import React, { useMemo, useState } from 'react'
 import { Camera, CameraType, FlashMode } from 'expo-camera'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import SwitchSVG from './SVG/SwitchSVG';
+import FlashOffSVG from './SVG/FlashOffSVG';
+import FlashOnSVG from './SVG/FlashOnSVG';
+import FlashAutoSVG from './SVG/FlashAutoSVG';
+import { showToast } from './CustomToast';
 
 const CameraComponent = React.memo((props) => {
 
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const [zoom, setZoom] = useState(0)
+    const [flash, setFlash] = useState(FlashMode.off)
 
     //To switch the camera type: front / back
     const [camType, setCamType] = useState(CameraType.back)
@@ -20,7 +25,31 @@ const CameraComponent = React.memo((props) => {
     }
 
     const handleFlashMode = () => {
+        if (flash === FlashMode.off) { 
+            setFlash(FlashMode.on)
+            showToast("Flash on") 
+        }
+        else if (flash === FlashMode.on) {
+            setFlash(FlashMode.auto)
+            showToast("Flash auto")
+        }
+        else {
+            setFlash(FlashMode.off)
+            showToast("Flash off")
+        }
+    }
 
+    const flashModeIcon = () => {
+        switch (flash) {
+            case FlashMode.off:
+                return <FlashOffSVG />
+            case FlashMode.on:
+                return <FlashOnSVG />
+            case FlashMode.auto:
+                return <FlashAutoSVG />
+            default:
+                return <FlashOffSVG />
+        }
     }
 
     //TODO: WORK ON PINCH GESTURE
@@ -32,7 +61,7 @@ const CameraComponent = React.memo((props) => {
             else if (e.velocity < 0) setZoom(Math.max(zoom - 0.007, 0))
         })
         .onFinalize((e) => {
-            if(zoom >= 1) setZoom(1)
+            if (zoom >= 1) setZoom(1)
             else if (zoom <= 0) setZoom(0)
         }),
         [zoom])
@@ -63,6 +92,7 @@ const CameraComponent = React.memo((props) => {
                 ref={props.cameraRef}
                 type={camType}
                 zoom={zoom}
+                flashMode={flash}
                 {...props}
             >
                 <View style={styles.topView}>
@@ -71,7 +101,7 @@ const CameraComponent = React.memo((props) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={handleFlashMode}>
-                        <SwitchSVG />
+                        {flashModeIcon()}
                     </TouchableOpacity>
                 </View>
             </Camera>
@@ -83,15 +113,12 @@ export default CameraComponent
 
 const styles = StyleSheet.create({
     topView: {
-        top: 10,
-        right: 0,
+        top: 5,
         display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        paddingRight: 10,
+        flexDirection: "row-reverse",
+        justifyContent: "space-between",
         width: "100%",
-
-        backgroundColor: "red"
+        padding: 5,
     },
     camera: {
         flex: 1,

@@ -37,6 +37,7 @@ const GLCamera = (props) => {
         <Node
             blendFunc={{ src: "one", dst: "one minus src alpha" }}
             shader={shader.YFlip}
+            backbuffering={true}
             uniforms={{
                 t: () => props.cameraRef.current || null
             }}

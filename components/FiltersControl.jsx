@@ -1,15 +1,20 @@
 import React, { useMemo, useRef } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import EditsContainer from './Filters/EditsContainer'
 import FilterSVG from './SVG/FilterSVG'
 import OptionSVG from './SVG/OptionSVG'
 import BottomSheet from '@gorhom/bottom-sheet';
 import FiltersBox from './Filters/FiltersBox'
 import OptionsContainer from './Filters/OptionsContainer'
+import ResetSVG from './SVG/ResetSVG'
+import { useDispatch } from 'react-redux'
+import { resetCanvas } from '../redux/slice/canvasSlice';
+import { showToast } from './CustomToast';
 
 
 const FiltersControl = (props) => {
     const { filtersControlRef, stay = true } = props
+
+    const dispatch = useDispatch()
 
     const snapPoints = useMemo(() => stay ? ["5%", "20%"] : ["20%"], [])
 
@@ -18,6 +23,11 @@ const FiltersControl = (props) => {
     //TODO: useCallBack ?
     const handleOpenSheetModal = (ref) => {
         ref.current?.snapToIndex(0)
+    }
+
+    const handleReset = () => {
+        dispatch(resetCanvas())
+        showToast("Canvas is reset")
     }
 
     return (
@@ -50,6 +60,14 @@ const FiltersControl = (props) => {
                     >
                         <OptionSVG />
                         <Text style={styles.btnText}>Options</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.btnWrap}
+                        onPress={handleReset}
+                    >
+                        <ResetSVG />
+                        <Text style={styles.btnText}>Reset</Text>
                     </TouchableOpacity>
                 </View>
             </BottomSheet>

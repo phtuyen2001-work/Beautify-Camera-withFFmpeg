@@ -1,8 +1,8 @@
 import { Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import FiltersControl from './FiltersControl'
-import { useDispatch } from 'react-redux';
-import { resetCanvas } from '../redux/slice/canvasSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeSticker, resetCanvas } from '../redux/slice/canvasSlice';
 import { manipulateAsync } from 'expo-image-manipulator';
 import * as MediaLibrary from 'expo-media-library';
 
@@ -15,6 +15,7 @@ import { captureRef } from 'react-native-view-shot';
 import VideoComponent from './VideoComponent';
 import { showToast } from './CustomToast';
 import ImageZoom from 'react-native-image-pan-zoom';
+import Draggable from 'react-native-draggable';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 const PotentialHeight = windowHeight * 0.95
@@ -22,17 +23,21 @@ const PotentialHeight = windowHeight * 0.95
 const EditScreen = ({ route, navigation }) => {
     const [selected, setSeleted] = useState(null)
 
-    const [modalVisible, setModalVisible] = useState(false)
-
     // const potentialHeight = useMemo(() => windowHeight * 0.95, [])
     const calculateHeight = () => selected?.height > PotentialHeight ? PotentialHeight : selected.height
+
+    const calculateWidth = (width) => {
+        if (!width) return windowWidth
+        if (width <= windowWidth) return windowWidth
+        else return width
+    }
 
     const surfaceRef = useRef()
     const viewRef = useRef()
     const videoRef = useRef()
 
-
     const dispatch = useDispatch()
+    const stickerSelector = useSelector(state => state.canvasCam.stickers)
 
     useEffect(() => {
         (async () => {
@@ -43,20 +48,40 @@ const EditScreen = ({ route, navigation }) => {
                 //resize the selected image before displaying it to the screen
                 const manipResult = await manipulateAsync(
                     file.uri,
-                    [{ resize: { width: windowWidth } }]
+                    [{ resize: { width: calculateWidth(file.width) } }]
                 )
-                // console.log(manipResult);
-                Image.getSize(manipResult.uri, (w, h) => setSeleted({ ...manipResult, height: h }))
+
+                setSeleted({ ...manipResult })
             }
             else if (file.type === "video") {
                 setSeleted(file)
             }
             else {
-                return <View>ERROR</View>
+                return (
+                    <View style={styles.loadingContainer}>
+                        <Text style={[styles.loadingText, { color: "red" }]}>ERROR</Text>
+                    </View>
+                )
             }
         })()
-
     }, [])
+
+    const handleDisplaySticker = () => {
+        const handleRemoveStickerById = (id) => {
+            dispatch(removeSticker(id))
+        }
+
+        return stickerSelector.map((item, index) => {
+            return (
+                <Draggable
+                    onLongPress={() => handleRemoveStickerById(item.id)}
+                    key={index}
+                    x={50} y={50}
+                    imageSource={item.src}
+                />
+            )
+        })
+    }
 
     const handleCancel = () => {
         //reset the canvas before switching back to CameraScreen
@@ -71,7 +96,7 @@ const EditScreen = ({ route, navigation }) => {
         let uri;
 
         if (route.params.type === "image") {
-            uri = await captureRef(surfaceRef)
+            uri = await captureRef(viewRef)
 
         }
         else {
@@ -99,7 +124,7 @@ const EditScreen = ({ route, navigation }) => {
                     <View style={styles.loadingContainer}>
                         <Text style={styles.loadingText}>Loading resource...</Text>
                     </View>
-                    ) : (
+                ) : (
                     <ImageZoom
                         style={{ backgroundColor: "#000" }}
                         cropWidth={windowWidth}
@@ -108,26 +133,29 @@ const EditScreen = ({ route, navigation }) => {
                         imageHeight={calculateHeight()}
                     >
                         <View style={[styles.surfaceContainer]} ref={viewRef}>
+
+                            {console.log(stickerSelector)}
+
+                            <View style={styles.stickerView}>
+                                {handleDisplaySticker()}
+                            </View>
+
                             <Surface
                                 ref={surfaceRef}
                                 style={{
-                                    width: windowWidth,
-                                    height: calculateHeight()
+                                    width: "100%",
+                                    height: calculateHeight(),
                                 }}
                             >
                                 <Effects>
                                     <GLImage
-                                        resizeMode='stretch'
+                                        resizeMode={selected.width > windowWidth ? "cover" : "stretch"}
                                         source={{ uri: selected?.uri }}
                                     />
                                 </Effects>
                             </Surface>
                         </View>
                     </ImageZoom>
-                    // <Image 
-                    //     style={{width: 300, height: 300}}
-                    //     source={{ uri: selected?.uri }}
-                    // />
                 )) : (
                     <View>
                         <VideoComponent
@@ -143,21 +171,6 @@ const EditScreen = ({ route, navigation }) => {
                     </View>
                 )}
             </View>
-
-            {/* <Modal visible={modalVisible} animationType="fade">
-                <ImageZoom
-                    onClick={() => setModalVisible(!modalVisible)}
-                    style={{ backgroundColor: "#000" }}
-                    cropWidth={windowWidth}
-                    cropHeight={windowHeight}
-                    imageWidth={windowWidth}
-                    imageHeight={selected?.height > potentialHeight ? potentialHeight : selected.height}
-                >   
-                    <View>
-
-                    </View>
-                </ImageZoom>
-            </Modal> */}
 
             <FiltersControl />
         </View>
@@ -198,6 +211,13 @@ const styles = StyleSheet.create({
         fontWeight: "500"
     },
 
+    stickerView: {
+        flex: 1,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: 999,
+    },
     surfaceContainer: {
         display: "flex",
         justifyContent: "center",

@@ -9,7 +9,21 @@ import ResetSVG from './SVG/ResetSVG'
 import { useDispatch } from 'react-redux'
 import { resetCanvas } from '../redux/slice/canvasSlice';
 import { showToast } from './CustomToast';
+import StickersBox from './Filters/StickersBox';
+import StickerSVG from './SVG/StickerSVG';
 
+const bottomSheetSetting = {
+    index: -1,
+    snapPoints: ["23%"],
+    enablePanDownToClose: false,
+    backgroundStyle: {
+        backgroundColor: "#000",
+        borderRadius: 0
+    },
+    handleIndicatorStyle: {
+        backgroundColor: "#fff"
+    },
+}
 
 const FiltersControl = (props) => {
     const { filtersControlRef, stay = true } = props
@@ -20,6 +34,7 @@ const FiltersControl = (props) => {
 
     const filterRef = useRef()
     const optionRef = useRef()
+    const stickerRef = useRef()
     //TODO: useCallBack ?
     const handleOpenSheetModal = (ref) => {
         ref.current?.snapToIndex(0)
@@ -48,6 +63,14 @@ const FiltersControl = (props) => {
                 <View style={styles.btnsView}>
                     <TouchableOpacity
                         style={styles.btnWrap}
+                        onPress={() => handleOpenSheetModal(stickerRef)}
+                    >
+                        <StickerSVG />
+                        <Text style={styles.btnText}>Stickers</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.btnWrap}
                         onPress={() => handleOpenSheetModal(filterRef)}
                     >
                         <FilterSVG />
@@ -73,34 +96,27 @@ const FiltersControl = (props) => {
             </BottomSheet>
 
             <BottomSheet
-                ref={filterRef}
-                index={-1}
-                snapPoints={["23%"]}
-                enablePanDownToClose={false}
+                {...bottomSheetSetting}
+                ref={stickerRef}
+                snapPoints={["30%"]}
                 handleComponent={null}
-                backgroundStyle={{
-                    backgroundColor: "#000",
-                    borderRadius: 0
-                }}
-                handleIndicatorStyle={{
-                    backgroundColor: "#fff"
-                }}
+            >
+                <StickersBox sheetRef={stickerRef} title="Stickers" />
+            </BottomSheet>
+
+            <BottomSheet
+                {...bottomSheetSetting}
+                ref={filterRef}
+                handleComponent={null}
             >
                 <FiltersBox sheetRef={filterRef} title="Filter" />
             </BottomSheet>
 
             <BottomSheet
+                {...bottomSheetSetting}
                 ref={optionRef}
-                index={-1}
                 snapPoints={["20%"]}
                 enablePanDownToClose={true}
-                backgroundStyle={{
-                    backgroundColor: "#000",
-                    borderRadius: 0
-                }}
-                handleIndicatorStyle={{
-                    backgroundColor: "#fff"
-                }}
             >
                 <OptionsContainer />
             </BottomSheet>

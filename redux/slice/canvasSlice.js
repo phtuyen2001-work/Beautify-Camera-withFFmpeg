@@ -16,6 +16,8 @@ export const canvasSlice = createSlice({
         blur: 0,
         negative: 0,
         flyeye: 0,
+
+        stickers: []
     },
     reducers: {
         setContrast: (state, action) => {
@@ -42,6 +44,14 @@ export const canvasSlice = createSlice({
         setFlyeye: (state, action) => {
             state.flyeye = action.payload
         },
+
+        setStickers: (state, action) => {
+            state.stickers = [...state.stickers, action.payload]
+        },
+        removeSticker: (state, action) => {
+            state.stickers = [...state.stickers].filter((item) => item.id !== action.payload)
+        },
+
         resetCanvas: (state) => {
             state.matrix = [
                 1, 0, 0, 0,
@@ -55,7 +65,9 @@ export const canvasSlice = createSlice({
             state.brightness = 1
             state.blur = 0
             state.negative = 0
-            state.flyeye = 0
+            state.flyeye = 0,
+
+            state.stickers = []
         }
     }
 });
@@ -66,6 +78,10 @@ export const {
     setBlur,
     setNegative,
     setFlyeye,
+
+    setStickers,
+    removeSticker,
+
     resetCanvas
 } = canvasSlice.actions
 

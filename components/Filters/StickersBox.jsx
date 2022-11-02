@@ -3,7 +3,7 @@ import React from 'react'
 import CheckSVG from '../SVG/CheckSVG'
 import CloseSVG from '../SVG/CloseSVG'
 import { useDispatch } from 'react-redux'
-import { setStickers } from '../../redux/slice/canvasSlice'
+import { addSticker, resetSticker } from '../../redux/slice/canvasSlice'
 
 import { STICKERS } from '../../stickers/stickers'
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
@@ -13,13 +13,14 @@ let stickerIndex = 0
 const StickersBox = (props) => {
     const { title, sheetRef } = props
 
-    const handleClose = () => {
-        sheetRef.current?.close()
+    const dispatch = useDispatch()
+    const handleAddSticker = (src) => {
+        dispatch(addSticker(src))
     }
 
-    const dispatch = useDispatch()
-    const addSticker = (src) => {
-        dispatch(setStickers(src))
+    const handleClose = () => {
+        dispatch(resetSticker())
+        sheetRef.current?.close()
     }
 
     const handleCheck = () => {
@@ -47,7 +48,7 @@ const StickersBox = (props) => {
                     {STICKERS.map((item, index) => (
                         <TouchableOpacity
                             style={{ margin: 15 }}
-                            onPress={() => addSticker({ src: item.src, id: stickerIndex++ })}
+                            onPress={() => handleAddSticker({ src: item.src, id: stickerIndex++ })}
                             key={index}
                         >
                             <Image

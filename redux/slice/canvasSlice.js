@@ -45,11 +45,14 @@ export const canvasSlice = createSlice({
             state.flyeye = action.payload
         },
 
-        setStickers: (state, action) => {
+        addSticker: (state, action) => {
             state.stickers = [...state.stickers, action.payload]
         },
         removeSticker: (state, action) => {
             state.stickers = [...state.stickers].filter((item) => item.id !== action.payload)
+        },
+        resetSticker: (state) => {
+            state.stickers.splice(0, state.stickers.length)
         },
 
         resetCanvas: (state) => {
@@ -79,8 +82,9 @@ export const {
     setNegative,
     setFlyeye,
 
-    setStickers,
+    addSticker,
     removeSticker,
+    resetSticker,
 
     resetCanvas
 } = canvasSlice.actions

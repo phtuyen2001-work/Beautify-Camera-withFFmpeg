@@ -1,4 +1,4 @@
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import FiltersControl from './FiltersControl'
 import { useDispatch } from 'react-redux';
@@ -14,13 +14,18 @@ import { captureRef } from 'react-native-view-shot';
 
 import VideoComponent from './VideoComponent';
 import { showToast } from './CustomToast';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
+const PotentialHeight = windowHeight * 0.95
 
 const EditScreen = ({ route, navigation }) => {
     const [selected, setSeleted] = useState(null)
 
-    const potentialHeight = useMemo(() => windowHeight * 0.95, [])
+    const [modalVisible, setModalVisible] = useState(false)
+
+    // const potentialHeight = useMemo(() => windowHeight * 0.95, [])
+    const calculateHeight = () => selected?.height > PotentialHeight ? PotentialHeight : selected.height
 
     const surfaceRef = useRef()
     const viewRef = useRef()
@@ -42,7 +47,6 @@ const EditScreen = ({ route, navigation }) => {
                 )
                 // console.log(manipResult);
                 Image.getSize(manipResult.uri, (w, h) => setSeleted({ ...manipResult, height: h }))
-
             }
             else if (file.type === "video") {
                 setSeleted(file)
@@ -67,7 +71,7 @@ const EditScreen = ({ route, navigation }) => {
         let uri;
 
         if (route.params.type === "image") {
-            uri = await captureRef(viewRef)
+            uri = await captureRef(surfaceRef)
 
         }
         else {
@@ -91,23 +95,39 @@ const EditScreen = ({ route, navigation }) => {
             </View>
 
             <View style={[styles.content]}>
-                {route.params.type === "image" ? (selected && (
-                    <View style={[styles.surfaceContainer]} ref={viewRef}>
-                        <Surface
-                            ref={surfaceRef}
-                            style={{ 
-                                width: windowWidth, 
-                                height: selected.height > potentialHeight ? potentialHeight : selected.height
-                            }}
-                        >
-                            <Effects>
-                                <GLImage
-                                    resizeMode='stretch'
-                                    source={{ uri: selected?.uri }}
-                                />
-                            </Effects>
-                        </Surface>
+                {route.params.type === "image" ? (!selected ? (
+                    <View style={styles.loadingContainer}>
+                        <Text style={styles.loadingText}>Loading resource...</Text>
                     </View>
+                    ) : (
+                    <ImageZoom
+                        style={{ backgroundColor: "#000" }}
+                        cropWidth={windowWidth}
+                        cropHeight={PotentialHeight}
+                        imageWidth={windowWidth}
+                        imageHeight={calculateHeight()}
+                    >
+                        <View style={[styles.surfaceContainer]} ref={viewRef}>
+                            <Surface
+                                ref={surfaceRef}
+                                style={{
+                                    width: windowWidth,
+                                    height: calculateHeight()
+                                }}
+                            >
+                                <Effects>
+                                    <GLImage
+                                        resizeMode='stretch'
+                                        source={{ uri: selected?.uri }}
+                                    />
+                                </Effects>
+                            </Surface>
+                        </View>
+                    </ImageZoom>
+                    // <Image 
+                    //     style={{width: 300, height: 300}}
+                    //     source={{ uri: selected?.uri }}
+                    // />
                 )) : (
                     <View>
                         <VideoComponent
@@ -123,6 +143,21 @@ const EditScreen = ({ route, navigation }) => {
                     </View>
                 )}
             </View>
+
+            {/* <Modal visible={modalVisible} animationType="fade">
+                <ImageZoom
+                    onClick={() => setModalVisible(!modalVisible)}
+                    style={{ backgroundColor: "#000" }}
+                    cropWidth={windowWidth}
+                    cropHeight={windowHeight}
+                    imageWidth={windowWidth}
+                    imageHeight={selected?.height > potentialHeight ? potentialHeight : selected.height}
+                >   
+                    <View>
+
+                    </View>
+                </ImageZoom>
+            </Modal> */}
 
             <FiltersControl />
         </View>
@@ -152,12 +187,23 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         zIndex: -1,
     },
+
+    loadingContainer: {
+        display: "flex",
+        alignItems: "center"
+    },
+    loadingText: {
+        color: "#fff",
+        fontSize: 18,
+        fontWeight: "500"
+    },
+
     surfaceContainer: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        maxHeight: windowHeight*0.95,
-        // backgroundColor: "rgba(0, 0, 0, 0.0)",
+        maxHeight: PotentialHeight,
+        // backgroundColor: "red",
     }
 })
 

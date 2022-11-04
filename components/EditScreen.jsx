@@ -1,4 +1,4 @@
-import { Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import FiltersControl from './FiltersControl'
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,9 +48,10 @@ const EditScreen = ({ route, navigation }) => {
                 //resize the selected image before displaying it to the screen
                 const manipResult = await manipulateAsync(
                     file.uri,
-                    [{ resize: { width: calculateWidth(file.width) } }]
+                    [
+                        { resize: { width: calculateWidth(file.width) } },
+                    ]
                 )
-
                 setSeleted({ ...manipResult })
             }
             else if (file.type === "video") {
@@ -116,8 +117,18 @@ const EditScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             <View style={styles.top}>
                 <Text onPress={handleCancel} style={styles.topText}>Cancel</Text>
+                <Text
+                    style={styles.topText}
+                    onPress={() => navigation.navigate("Cropper", {
+                        imgSrc: selected.uri,
+                        imageWidth: selected.width,
+                        imageHeight: selected.height
+                    })}>
+                    Crop
+                </Text>
                 <Text onPress={handleSave} style={styles.topText}>Save</Text>
             </View>
+
 
             <View style={[styles.content]}>
                 {route.params.type === "image" ? (!selected ? (
@@ -133,8 +144,6 @@ const EditScreen = ({ route, navigation }) => {
                         imageHeight={calculateHeight()}
                     >
                         <View style={[styles.surfaceContainer]} ref={viewRef}>
-
-                            {console.log(stickerSelector)}
 
                             <View style={styles.stickerView}>
                                 {handleDisplaySticker()}
@@ -223,7 +232,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         maxHeight: PotentialHeight,
-        // backgroundColor: "red",
     }
 })
 

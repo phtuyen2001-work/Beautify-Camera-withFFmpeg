@@ -11,6 +11,7 @@ import { store } from "./redux/store"
 import { RootSiblingParent } from 'react-native-root-siblings';
 import "webgltexture-loader-expo-camera";
 import GLScreen from './components/GLScreen';
+import Cropper from './components/Cropper';
 // import "webgltexture-loader-expo"
 
 const Stack = createNativeStackNavigator()
@@ -34,6 +35,10 @@ function Main() {
           <Stack.Screen
             name='EditScreen'
             component={EditScreen}
+          />
+          <Stack.Screen 
+            name='Cropper'
+            component={Cropper}
           />
           <Stack.Screen
             name='GLScreen'

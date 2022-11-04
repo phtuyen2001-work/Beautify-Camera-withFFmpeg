@@ -88,6 +88,7 @@ const GLScreen = (props) => {
             <FiltersControl
                 stay={false}
                 filtersControlRef={filtersControlRef}
+                disableSticker={true}
             />
         </View>
     )

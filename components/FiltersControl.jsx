@@ -26,7 +26,13 @@ const bottomSheetSetting = {
 }
 
 const FiltersControl = (props) => {
-    const { filtersControlRef, stay = true } = props
+    const {
+        filtersControlRef,
+        disableFilter = false,
+        disableOption = false,
+        disableSticker = false,
+        stay = true
+    } = props
 
     const dispatch = useDispatch()
 
@@ -61,29 +67,34 @@ const FiltersControl = (props) => {
                 }}
             >
                 <View style={styles.btnsView}>
-                    <TouchableOpacity
-                        style={styles.btnWrap}
-                        onPress={() => handleOpenSheetModal(stickerRef)}
-                    >
-                        <StickerSVG />
-                        <Text style={styles.btnText}>Stickers</Text>
-                    </TouchableOpacity>
+                    {!disableSticker &&
+                        <TouchableOpacity
+                            style={styles.btnWrap}
+                            onPress={() => handleOpenSheetModal(stickerRef)}
+                        >
+                            <StickerSVG />
+                            <Text style={styles.btnText}>Stickers</Text>
+                        </TouchableOpacity>
+                    }
+                    {!disableFilter &&
+                        <TouchableOpacity
+                            style={styles.btnWrap}
+                            onPress={() => handleOpenSheetModal(filterRef)}
+                        >
+                            <FilterSVG />
+                            <Text style={styles.btnText}>Filters</Text>
+                        </TouchableOpacity>
+                    }
 
-                    <TouchableOpacity
-                        style={styles.btnWrap}
-                        onPress={() => handleOpenSheetModal(filterRef)}
-                    >
-                        <FilterSVG />
-                        <Text style={styles.btnText}>Filters</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.btnWrap}
-                        onPress={() => handleOpenSheetModal(optionRef)}
-                    >
-                        <OptionSVG />
-                        <Text style={styles.btnText}>Options</Text>
-                    </TouchableOpacity>
+                    {!disableOption &&
+                        <TouchableOpacity
+                            style={styles.btnWrap}
+                            onPress={() => handleOpenSheetModal(optionRef)}
+                        >
+                            <OptionSVG />
+                            <Text style={styles.btnText}>Options</Text>
+                        </TouchableOpacity>
+                    }
 
                     <TouchableOpacity
                         style={styles.btnWrap}
@@ -95,31 +106,37 @@ const FiltersControl = (props) => {
                 </View>
             </BottomSheet>
 
-            <BottomSheet
-                {...bottomSheetSetting}
-                ref={stickerRef}
-                snapPoints={["30%"]}
-                handleComponent={null}
-            >
-                <StickersBox sheetRef={stickerRef} title="Stickers" />
-            </BottomSheet>
+            {!disableSticker &&
+                <BottomSheet
+                    {...bottomSheetSetting}
+                    ref={stickerRef}
+                    snapPoints={["30%"]}
+                    handleComponent={null}
+                >
+                    <StickersBox sheetRef={stickerRef} title="Stickers" />
+                </BottomSheet>
+            }
 
-            <BottomSheet
-                {...bottomSheetSetting}
-                ref={filterRef}
-                handleComponent={null}
-            >
-                <FiltersBox sheetRef={filterRef} title="Filter" />
-            </BottomSheet>
+            {!disableFilter &&
+                <BottomSheet
+                    {...bottomSheetSetting}
+                    ref={filterRef}
+                    handleComponent={null}
+                >
+                    <FiltersBox sheetRef={filterRef} title="Filter" />
+                </BottomSheet>
+            }
 
-            <BottomSheet
-                {...bottomSheetSetting}
-                ref={optionRef}
-                snapPoints={["20%"]}
-                enablePanDownToClose={true}
-            >
-                <OptionsContainer />
-            </BottomSheet>
+            {!disableOption &&
+                <BottomSheet
+                    {...bottomSheetSetting}
+                    ref={optionRef}
+                    snapPoints={["20%"]}
+                    enablePanDownToClose={true}
+                >
+                    <OptionsContainer />
+                </BottomSheet>
+            }
         </>
     )
 }

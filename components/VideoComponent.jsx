@@ -9,23 +9,30 @@ const VideoComponent = (props) => {
 
     const [videoStatus, setVideoStatus] = useState({})
 
-    // useEffect(() => {
-    //     const loop = () => {
-    //         const raf = requestAnimationFrame(loop)
-    //     }
-    // }, [])
-
     /**
      * To handle the status of video
      */
-    const togglePlay = () => {
-        if (videoStatus.isPlaying) {
-            videoRef.current?.pauseAsync()
-        }
-        else {
-            videoRef.current?.playAsync()
-        }
-    }
+    // const togglePlay = () => {
+    //     if (videoStatus.isPlaying) {
+    //         videoRef.current?.pauseAsync()
+    //     }
+    //     else {
+    //         videoRef.current?.playAsync()
+    //     }
+
+    //     setTimeout(() => {
+            
+    //     }, 2000)
+    // }
+
+    // const renderIcon = () => {
+    //     if(videoStatus.isPlaying) {
+    //         return <PauseSVG />
+    //     }
+    //     else {
+    //         return <PlaySVG />
+    //     }
+    // }
 
     return (
         <Video
@@ -37,7 +44,7 @@ const VideoComponent = (props) => {
             onPlaybackStatusUpdate={status => setVideoStatus(() => status)}
             {...rest}
         >
-            <View
+            {/* <View
                 style={{
                     flex: 1,
                     justifyContent: "center",
@@ -48,9 +55,9 @@ const VideoComponent = (props) => {
                 <TouchableOpacity
                     onPress={togglePlay}
                 >
-                    {!videoStatus.isPlaying ? <PlaySVG /> : <PauseSVG />}
+                    {renderIcon()}
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </Video>
     )
 }

@@ -22,8 +22,8 @@ const PotentialHeight = windowHeight * 0.95
 
 const EditScreen = ({ route, navigation }) => {
     const [selected, setSeleted] = useState(null)
+    const { type: contentType } = route.params
 
-    // const potentialHeight = useMemo(() => windowHeight * 0.95, [])
     const calculateHeight = () => selected?.height > PotentialHeight ? PotentialHeight : selected.height
 
     const calculateWidth = (width) => {
@@ -46,7 +46,7 @@ const EditScreen = ({ route, navigation }) => {
                 //resize the selected image before displaying it to the screen
                 const manipResult = await manipulateAsync(
                     file.uri,
-                    [{ resize: { width: calculateWidth(file.width) } }]
+                    // [{ resize: { width: calculateWidth(file.width) } }]
                 )
                 setSeleted({ ...manipResult })
             }
@@ -113,7 +113,7 @@ const EditScreen = ({ route, navigation }) => {
     const handleSave = async () => {
         let uri;
 
-        if (route.params.type === "image") {
+        if (contentType === "image") {
             uri = await captureRef(viewRef)
 
         }
@@ -134,21 +134,21 @@ const EditScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             <View style={styles.top}>
                 <Text onPress={handleCancel} style={styles.topText}>Cancel</Text>
-                <Text
-                    style={styles.topText}
+                {contentType === "image" && <Text
+                    style={[styles.topText]}
                     onPress={() => navigation.navigate("Cropper", {
                         imgSrc: selected.uri,
                         imageWidth: selected.width,
                         imageHeight: selected.height
                     })}>
                     Crop
-                </Text>
+                </Text>}
                 <Text onPress={handleSave} style={styles.topText}>Save</Text>
             </View>
 
 
             <View style={[styles.content]}>
-                {route.params.type === "image" ? (!selected ? (
+                {contentType === "image" ? (!selected ? (
                     <View style={styles.loadingContainer}>
                         <Text style={styles.loadingText}>Loading resource...</Text>
                     </View>
@@ -170,14 +170,15 @@ const EditScreen = ({ route, navigation }) => {
                                 ref={surfaceRef}
                                 style={{
                                     width: "100%",
-                                    height: calculateHeight(),
+                                    height: "100%",
                                 }}
                             >
-                                <Effects>
+                                <Effects width={selected.width} height={selected.height}>
                                     <GLImage
                                         resizeMode={selected.width > windowWidth ? "cover" : "stretch"}
                                         source={{ uri: selected?.uri }}
                                     />
+                                    {/* {{ uri: selected?.uri }} */}
                                 </Effects>
                             </Surface>
                         </View>
@@ -186,7 +187,8 @@ const EditScreen = ({ route, navigation }) => {
                     <View>
                         <VideoComponent
                             videoRef={videoRef}
-                            isLooping={true}
+                            useNativeControls
+                            isLooping={false}
                             resizeMode='contain'
                             source={{ uri: selected?.uri }}
                             style={{
@@ -198,7 +200,8 @@ const EditScreen = ({ route, navigation }) => {
                 )}
             </View>
 
-            <FiltersControl />
+            {contentType === "image" &&
+                <FiltersControl />}
         </View>
     )
 }

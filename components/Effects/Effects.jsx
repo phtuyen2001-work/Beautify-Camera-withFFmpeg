@@ -10,7 +10,7 @@ import Negative from './Negative';
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window");
 
 const Effects = (props) => {
-    const { children } = props
+    const { width = windowWidth, height = windowHeight, children } = props
 
     const {
         matrix, offset,
@@ -29,7 +29,7 @@ const Effects = (props) => {
                         saturation={saturation}
                         brightness={brightness}
                     >
-                        <Blur passes={6} factor={blur} width={windowWidth} height={windowHeight}>
+                        <Blur passes={6} factor={blur} width={width} height={height}>
                             {children}
                         </Blur>
                     </ContrastSaturationBrightness>

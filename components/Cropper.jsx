@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ImageCrop from '@mtourj/react-native-image-crop'
 import CloseSVG from './SVG/CloseSVG'
 import CheckSVG from './SVG/CheckSVG'
@@ -22,11 +22,14 @@ const Cropper = (props) => {
 
     const handleCheck = () => {
         const cropResult = cropperRef.current.getCropData()
-        navigation.goBack({
+        
+        navigation.navigate("EditScreen", {
             uri: selectedImage,
-            type: "image"
+            type: "image",
+            offset: cropResult.offset,
+            size: cropResult.size
         })
-        console.log(cropResult);
+        // console.log(cropResult);
     }
 
     const handleHorizontalFlip = async () => {
@@ -73,7 +76,7 @@ const Cropper = (props) => {
                 </TouchableOpacity>
             </View>
 
-            <View style={{ display: "flex", justifyContent: "center" }}>
+            <View style={styles.cropView}>
                 <ImageCrop
                     ref={cropperRef}
                     source={{ uri: selectedImage }}
@@ -91,7 +94,8 @@ export default Cropper
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: "#000"
     },
     top: {
         height: "10%",
@@ -102,4 +106,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: "#000"
     },
+    cropView: {
+        flex: 1,
+        display: "flex", 
+        justifyContent: "center",
+    }
 })

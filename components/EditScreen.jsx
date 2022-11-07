@@ -42,15 +42,11 @@ const EditScreen = ({ route, navigation }) => {
     useEffect(() => {
         (async () => {
             const file = route.params
-            // Image.getSize(file.uri, (w, h) => console.log(w, h))
-
             if (file.type === "image") {
                 //resize the selected image before displaying it to the screen
                 const manipResult = await manipulateAsync(
                     file.uri,
-                    [
-                        { resize: { width: calculateWidth(file.width) } },
-                    ]
+                    [{ resize: { width: calculateWidth(file.width) } }]
                 )
                 setSeleted({ ...manipResult })
             }
@@ -66,6 +62,27 @@ const EditScreen = ({ route, navigation }) => {
             }
         })()
     }, [])
+
+    useEffect(() => {
+        (async () => {
+            const file = route.params
+            if (file.offset && file.size) {
+                const manipResult = await manipulateAsync(
+                    file.uri,
+                    [{
+                        crop: {
+                            height: file.size?.height,
+                            width: file.size?.width,
+                            originX: file.offset?.x,
+                            originY: file.offset?.y
+                        }
+                    },]
+                )
+                setSeleted({ ...manipResult })
+            }
+
+        })()
+    }, [route])
 
     const handleDisplaySticker = () => {
         const handleRemoveStickerById = (id) => {

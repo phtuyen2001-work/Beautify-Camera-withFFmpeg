@@ -203,6 +203,7 @@ export default function CameraScreen({ navigation }) {
 const styles = StyleSheet.create({
   actionContainer: {
     height: "20%",
+    backgroundColor: "#fff",
     display: 'flex',
     flexDirection: 'column',
     alignItems: "center",

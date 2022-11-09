@@ -93,7 +93,7 @@ const GLScreen = (props) => {
             <FiltersControl
                 stay={false}
                 filtersControlRef={filtersControlRef}
-                disableSticker={true}
+                disableInsertible={true}
             />
         </View>
     )

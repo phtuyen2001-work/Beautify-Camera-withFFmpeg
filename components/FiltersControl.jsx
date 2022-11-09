@@ -9,13 +9,14 @@ import ResetSVG from './SVG/ResetSVG'
 import { useDispatch } from 'react-redux'
 import { resetCanvas } from '../redux/slice/canvasSlice';
 import { showToast } from './CustomToast';
-import StickersBox from './Filters/StickersBox';
-import StickerSVG from './SVG/StickerSVG';
+import InsertibleContainer from './Filters/InsertibleContainer';
+import InsertSVG from './SVG/InsertSVG';
+import EditsContainer from './Filters/EditsContainer';
 
 const bottomSheetSetting = {
     index: -1,
-    snapPoints: ["23%"],
-    enablePanDownToClose: false,
+    snapPoints: ["20%"],
+    enablePanDownToClose: true,
     backgroundStyle: {
         backgroundColor: "#000",
         borderRadius: 0
@@ -30,7 +31,7 @@ const FiltersControl = (props) => {
         filtersControlRef,
         disableFilter = false,
         disableOption = false,
-        disableSticker = false,
+        disableInsertible = false,
         stay = true
     } = props
 
@@ -40,7 +41,7 @@ const FiltersControl = (props) => {
 
     const filterRef = useRef()
     const optionRef = useRef()
-    const stickerRef = useRef()
+    const insertibleRef = useRef()
     //TODO: useCallBack ?
     const handleOpenSheetModal = (ref) => {
         ref.current?.snapToIndex(0)
@@ -67,13 +68,13 @@ const FiltersControl = (props) => {
                 }}
             >
                 <View style={styles.btnsView}>
-                    {!disableSticker &&
+                    {!disableInsertible &&
                         <TouchableOpacity
                             style={styles.btnWrap}
-                            onPress={() => handleOpenSheetModal(stickerRef)}
+                            onPress={() => handleOpenSheetModal(insertibleRef)}
                         >
-                            <StickerSVG />
-                            <Text style={styles.btnText}>Stickers</Text>
+                            <InsertSVG />
+                            <Text style={styles.btnText}>Insert</Text>
                         </TouchableOpacity>
                     }
                     {!disableFilter &&
@@ -106,14 +107,12 @@ const FiltersControl = (props) => {
                 </View>
             </BottomSheet>
 
-            {!disableSticker &&
+            {!disableInsertible &&
                 <BottomSheet
                     {...bottomSheetSetting}
-                    ref={stickerRef}
-                    snapPoints={["30%"]}
-                    handleComponent={null}
+                    ref={insertibleRef}
                 >
-                    <StickersBox sheetRef={stickerRef} title="Stickers" />
+                    <InsertibleContainer />
                 </BottomSheet>
             }
 
@@ -121,6 +120,8 @@ const FiltersControl = (props) => {
                 <BottomSheet
                     {...bottomSheetSetting}
                     ref={filterRef}
+                    snapPoints={["23%"]}
+                    enablePanDownToClose={false}
                     handleComponent={null}
                 >
                     <FiltersBox sheetRef={filterRef} title="Filter" />
@@ -131,8 +132,6 @@ const FiltersControl = (props) => {
                 <BottomSheet
                     {...bottomSheetSetting}
                     ref={optionRef}
-                    snapPoints={["20%"]}
-                    enablePanDownToClose={true}
                 >
                     <OptionsContainer />
                 </BottomSheet>

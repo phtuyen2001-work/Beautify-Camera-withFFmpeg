@@ -12,10 +12,10 @@ let stickerIndex = 0
 
 const StickersBox = (props) => {
     const { title, sheetRef } = props
-
     const dispatch = useDispatch()
-    const handleAddSticker = (src) => {
-        dispatch(addSticker(src))
+
+    const handleAddSticker = (item) => {
+        dispatch(addSticker({ src: item.src, id: stickerIndex++ }))
     }
 
     const handleClose = () => {
@@ -48,7 +48,7 @@ const StickersBox = (props) => {
                     {STICKERS.map((item, index) => (
                         <TouchableOpacity
                             style={{ margin: 15 }}
-                            onPress={() => handleAddSticker({ src: item.src, id: stickerIndex++ })}
+                            onPress={() => handleAddSticker(item)}
                             key={index}
                         >
                             <Image

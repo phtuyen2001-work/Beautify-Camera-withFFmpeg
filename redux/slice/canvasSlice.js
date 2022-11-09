@@ -17,7 +17,8 @@ export const canvasSlice = createSlice({
         negative: 0,
         flyeye: 0,
 
-        stickers: []
+        stickers: [],
+        texts: []
     },
     reducers: {
         setContrast: (state, action) => {
@@ -55,6 +56,16 @@ export const canvasSlice = createSlice({
             state.stickers.splice(0, state.stickers.length)
         },
 
+        addText: (state, action) => {
+            state.texts = [...state.texts, action.payload]
+        },
+        removeText: (state, action) => {
+            state.texts = [...state.texts].filter((item) => item.id !== action.payload)
+        },
+        resetText: (state) => {
+            state.texts.splice(0, state.texts.length)
+        },
+
         resetCanvas: (state) => {
             state.matrix = [
                 1, 0, 0, 0,
@@ -71,6 +82,7 @@ export const canvasSlice = createSlice({
             state.flyeye = 0,
 
             state.stickers = []
+            state.texts = []
         }
     }
 });
@@ -85,6 +97,10 @@ export const {
     addSticker,
     removeSticker,
     resetSticker,
+
+    addText,
+    removeText,
+    resetText,
 
     resetCanvas
 } = canvasSlice.actions

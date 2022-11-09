@@ -40,6 +40,7 @@ const EditScreen = ({ route, navigation }) => {
 
     const dispatch = useDispatch()
     const stickerSelector = useSelector(state => state.canvasCam.stickers)
+    const textSelector = useSelector(state => state.canvasCam.texts)
 
     // const getSize = async (uri) => {
     //     return new Promise((resolve, reject) => {
@@ -111,16 +112,27 @@ const EditScreen = ({ route, navigation }) => {
 
     // To add sticker in runtime
     const handleDisplaySticker = () => {
-        return stickerSelector.map((item, index) => {
-            return (
-                <DraggableSticker
-                    key={index}
-                    id={item.id}
-                    surfaceSize={surfaceSize}
-                    imgSrc={item.src}
-                />
-            )
-        })
+        return stickerSelector.map((item, index) => (
+            <DraggableSticker
+                key={index}
+                id={item.id}
+                surfaceSize={surfaceSize}
+                imgSrc={item.src}
+            />
+        )
+        )
+    }
+    // To add text in runtime
+    const handleDisplayText = () => {
+        return textSelector.map((item, index) => (
+            <DraggableText
+                key={index}
+                id={item.id}
+                textColor={item.color}
+                content={item.content}
+                surfaceSize={surfaceSize}
+            />
+        ))
     }
 
     const handleCancel = () => {
@@ -191,7 +203,7 @@ const EditScreen = ({ route, navigation }) => {
                         >
                             <View style={styles.stickerView}>
                                 {handleDisplaySticker()}
-                                <DraggableText />
+                                {handleDisplayText()}
                             </View>
 
                             <Surface

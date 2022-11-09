@@ -43,8 +43,6 @@ export default function CameraScreen({ navigation }) {
     if (!pickerResult.cancelled) {
       //reset canvas before navigating to the EditScreen
       dispatch(resetCanvas())
-      // console.log(pickerResult);
-      // Image.getSize(pickerResult.uri, (w, h) => console.log(w, h))
       navigation.navigate("EditScreen", { ...pickerResult })
     }
   }
@@ -78,9 +76,7 @@ export default function CameraScreen({ navigation }) {
   const takePhoto = async () => {
     if (!camera) return
     const photo = await camera.current.takePictureAsync()
-    // let uri = await captureRef(surfaceRef)
     showToast("Clicked!")
-
     navigation.navigate("EditScreen", { ...photo, type: "image" })
   }
 

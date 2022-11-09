@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native'
-import React, { useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { Surface } from 'gl-react-expo'
 import Effects from './Effects/Effects'
 import GLCamera from './GLCamera'
@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 
+
 const GLScreen = (props) => {
     const navigation = useNavigation()
 
@@ -23,21 +24,25 @@ const GLScreen = (props) => {
 
     const snapPoints = useMemo(() => ["5%", "20%"], [])
 
-    const handleLeftBtn = () => {
+    const handleLeftBtn = useCallback(() => {
         navigation.goBack()
-    }
+    }, [])
 
-    const handleRightBtn = () => {
+    const handleRightBtn = useCallback(() => {
         filtersControlRef.current?.snapToIndex(0)
-    }
+    }, [])
 
-    const takePhoto = async () => {
-        if (!cameraRef) return
-        const uri = await captureRef(surfaceRef)
-        showToast("Clicked!")
+    const takePhoto = useCallback(
+        async () => {
+            if (!cameraRef) return
 
-        navigation.navigate("EditScreen", { uri, type: "image" })
-    }
+            const uri = await captureRef(surfaceRef, {
+                format: "jpg",
+            })
+            showToast("Clicked!")
+            navigation.navigate("EditScreen", { uri, type: "image" })
+        }, []
+    )
 
     return (
         <View style={styles.container}>

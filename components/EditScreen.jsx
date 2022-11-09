@@ -1,8 +1,8 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import FiltersControl from './FiltersControl'
 import { useDispatch, useSelector } from 'react-redux';
-import { removeSticker, resetCanvas } from '../redux/slice/canvasSlice';
+import { resetCanvas } from '../redux/slice/canvasSlice';
 import { manipulateAsync } from 'expo-image-manipulator';
 import * as MediaLibrary from 'expo-media-library';
 
@@ -15,22 +15,24 @@ import { captureRef } from 'react-native-view-shot';
 import VideoComponent from './VideoComponent';
 import { showToast } from './CustomToast';
 import ImageZoom from 'react-native-image-pan-zoom';
-import Draggable from 'react-native-draggable';
+import DraggableSticker from './InsertableItems/DraggableSticker';
+import DraggableText from './InsertableItems/DraggableText';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 const PotentialHeight = windowHeight * 0.95
 
 const EditScreen = ({ route, navigation }) => {
     const [selected, setSeleted] = useState(null)
+    const [surfaceSize, setSurfaceSize] = useState({ width: 0, height: 0 })
     const { type: contentType } = route.params
 
-    const calculateHeight = () => selected?.height > PotentialHeight ? PotentialHeight : selected.height
+    // const calculateHeight = () => selected?.height > PotentialHeight ? PotentialHeight : selected.height
 
-    const calculateWidth = (width) => {
-        if (!width) return windowWidth
-        if (width <= windowWidth) return windowWidth
-        else return width
-    }
+    // const calculateWidth = (width) => {
+    //     if (!width) return windowWidth
+    //     if (width <= windowWidth) return windowWidth
+    //     else return width
+    // }
 
     const surfaceRef = useRef()
     const viewRef = useRef()
@@ -39,28 +41,52 @@ const EditScreen = ({ route, navigation }) => {
     const dispatch = useDispatch()
     const stickerSelector = useSelector(state => state.canvasCam.stickers)
 
+    // const getSize = async (uri) => {
+    //     return new Promise((resolve, reject) => {
+    //         Image.getSize(uri, (w, h) => {
+    //             resolve({
+    //                 uri: uri,
+    //                 width: w > windowWidth ? windowWidth : w,
+    //                 height: h > windowHeight ? windowHeight : h
+    //             })
+    //         }, async(error) => {
+    //             reject("Error", error)
+    //         })
+    //     })
+    // }
+
     useEffect(() => {
-        (async () => {
-            const file = route.params
-            if (file.type === "image") {
+        const file = route.params
+        if (file.type === "image") {
+            Image.getSize(file.uri, async (w, h) => {
                 //resize the selected image before displaying it to the screen
-                const manipResult = await manipulateAsync(
+                const manipResult = await manipulateAsync(file.uri)
+                const surfaceManip = await manipulateAsync(
                     file.uri,
-                    // [{ resize: { width: calculateWidth(file.width) } }]
+                    [{ resize: { width: windowWidth } }]
                 )
-                setSeleted({ ...manipResult })
-            }
-            else if (file.type === "video") {
-                setSeleted(file)
-            }
-            else {
-                return (
-                    <View style={styles.loadingContainer}>
-                        <Text style={[styles.loadingText, { color: "red" }]}>ERROR</Text>
-                    </View>
-                )
-            }
-        })()
+                // const manipResult = await getSize(file.uri)
+                // console.log("file", file);
+                // console.log("manip", manipResult);
+                setSurfaceSize({
+                    width: surfaceManip.width,
+                    height: surfaceManip.height
+                })
+                setSeleted(manipResult)
+            }, (err) => {
+                console.log(err);
+            })
+        }
+        else if (file.type === "video") {
+            setSeleted(file)
+        }
+        else {
+            return (
+                <View style={styles.loadingContainer}>
+                    <Text style={[styles.loadingText, { color: "red" }]}>ERROR</Text>
+                </View>
+            )
+        }
     }, [])
 
     useEffect(() => {
@@ -78,24 +104,20 @@ const EditScreen = ({ route, navigation }) => {
                         }
                     },]
                 )
-                setSeleted({ ...manipResult })
+                setSeleted(manipResult)
             }
-
         })()
     }, [route])
 
+    // To add sticker in runtime
     const handleDisplaySticker = () => {
-        const handleRemoveStickerById = (id) => {
-            dispatch(removeSticker(id))
-        }
-
         return stickerSelector.map((item, index) => {
             return (
-                <Draggable
-                    onLongPress={() => handleRemoveStickerById(item.id)}
+                <DraggableSticker
                     key={index}
-                    x={50} y={50}
-                    imageSource={item.src}
+                    id={item.id}
+                    surfaceSize={surfaceSize}
+                    imgSrc={item.src}
                 />
             )
         })
@@ -157,25 +179,31 @@ const EditScreen = ({ route, navigation }) => {
                         style={{ backgroundColor: "#000" }}
                         cropWidth={windowWidth}
                         cropHeight={PotentialHeight}
-                        imageWidth={windowWidth}
-                        imageHeight={calculateHeight()}
+                        imageWidth={surfaceSize.width}
+                        imageHeight={surfaceSize.height}
                     >
-                        <View style={[styles.surfaceContainer]} ref={viewRef}>
-
+                        <View
+                            ref={viewRef}
+                            style={[styles.surfaceContainer, {
+                                // width: surfaceSize.width,
+                                // height: surfaceSize.height
+                            }]}
+                        >
                             <View style={styles.stickerView}>
                                 {handleDisplaySticker()}
+                                <DraggableText />
                             </View>
 
                             <Surface
                                 ref={surfaceRef}
                                 style={{
-                                    width: "100%",
-                                    height: "100%",
+                                    width: surfaceSize.width,
+                                    height: surfaceSize.height
                                 }}
                             >
                                 <Effects width={selected.width} height={selected.height}>
                                     <GLImage
-                                        resizeMode={selected.width > windowWidth ? "cover" : "stretch"}
+                                        // resizeMode={selected.width > windowWidth ? "cover" : "stretch"}
                                         source={{ uri: selected?.uri }}
                                     />
                                     {/* {{ uri: selected?.uri }} */}
@@ -226,13 +254,16 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
+        display: "flex",
         justifyContent: "center",
+        alignContent: "center",
         zIndex: -1,
     },
 
     loadingContainer: {
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "center"
     },
     loadingText: {
         color: "#fff",
@@ -251,7 +282,9 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        maxHeight: PotentialHeight,
+        // maxHeight: PotentialHeight,
+
+        // backgroundColor: "red",
     }
 })
 

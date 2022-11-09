@@ -16,40 +16,6 @@ import Cropper from './components/Cropper';
 
 const Stack = createNativeStackNavigator()
 
-function Main() {
-  return (
-    <BottomSheetModalProvider>
-      <StatusBar hidden />
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName='CameraScreen'
-          screenOptions={{
-            headerShown: false
-          }}
-        >
-          <Stack.Screen
-            name='CameraScreen'
-            component={CameraScreen}
-
-          />
-          <Stack.Screen
-            name='EditScreen'
-            component={EditScreen}
-          />
-          <Stack.Screen 
-            name='Cropper'
-            component={Cropper}
-          />
-          <Stack.Screen
-            name='GLScreen'
-            component={GLScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </BottomSheetModalProvider>
-  )
-}
-
 export default function App() {
   const image = {
     uri: require("./assets/splash.png")
@@ -60,7 +26,35 @@ export default function App() {
       <Provider store={store}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <RootSiblingParent>
-            <Main />
+            <BottomSheetModalProvider>
+              <StatusBar hidden />
+              <NavigationContainer>
+                <Stack.Navigator
+                  initialRouteName='CameraScreen'
+                  screenOptions={{
+                    headerShown: false
+                  }}
+                >
+                  <Stack.Screen
+                    name='CameraScreen'
+                    component={CameraScreen}
+
+                  />
+                  <Stack.Screen
+                    name='EditScreen'
+                    component={EditScreen}
+                  />
+                  <Stack.Screen
+                    name='Cropper'
+                    component={Cropper}
+                  />
+                  <Stack.Screen
+                    name='GLScreen'
+                    component={GLScreen}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </BottomSheetModalProvider>
           </RootSiblingParent>
         </GestureHandlerRootView>
       </Provider>

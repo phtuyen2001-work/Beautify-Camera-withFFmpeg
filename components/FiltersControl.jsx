@@ -11,7 +11,6 @@ import { resetCanvas } from '../redux/slice/canvasSlice';
 import { showToast } from './CustomToast';
 import InsertibleContainer from './Filters/InsertibleContainer';
 import InsertSVG from './SVG/InsertSVG';
-import EditsContainer from './Filters/EditsContainer';
 
 const bottomSheetSetting = {
     index: -1,

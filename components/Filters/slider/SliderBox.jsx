@@ -1,17 +1,27 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Slider from '@react-native-community/slider'
 import CloseSVG from '../../SVG/CloseSVG'
 import CheckSVG from '../../SVG/CheckSVG'
-import { useDispatch } from 'react-redux'
-import { setContrast, setSaturation, setBrightness, setBlur, setNegative, setFlyeye } from '../../../redux/slice/canvasSlice'
 
 const SliderBox = (props) => {
-    const { sheetRef, title, minimumValue=0, maximumValue=2, step=0.05, initialValue=1 } = props
+    const {
+        sheetRef,
+        title,
+        initialValue = 1,
+        minimumValue = 0,
+        maximumValue = 2,
+        step = 0.05,
+        setValueFunction,
+    } = props
 
-    const dispatch = useDispatch()
     //to show value under the slider
     const [value, setValue] = useState(initialValue)
+    useEffect(() => {
+        //Use props.value to distinguish this value and parent's value
+        setValue(props.value)
+    }, [title])
+
     const handleValueChange = (e) => {
         setValue(e)
     }
@@ -21,32 +31,7 @@ const SliderBox = (props) => {
     }
 
     const handleCheck = () => {
-        switch (title) {
-            // set contrast
-            case 'contrast':
-                dispatch(setContrast(value))
-                break;
-            // set saturation
-            case 'saturation':
-                dispatch(setSaturation(value))
-                break;
-            // set brightness
-            case 'brightness':
-                dispatch(setBrightness(value))
-                break;
-            // set blur
-            case 'blur':
-                dispatch(setBlur(value))
-                break;
-            // set negative
-            case "negative":
-                dispatch(setNegative(value))
-                break;
-            // set flyeye
-            case "flyeye":
-                dispatch(setFlyeye(value))
-                break;
-        }
+        setValueFunction(value)
         sheetRef.current?.close()
     }
 
@@ -73,7 +58,7 @@ const SliderBox = (props) => {
                     value={value}
                     onValueChange={handleValueChange}
                 />
-                <Text style={styles.text}>{value.toFixed(2)}</Text>
+                <Text style={styles.text}>{value?.toFixed(2)}</Text>
             </View>
         </View>
     )

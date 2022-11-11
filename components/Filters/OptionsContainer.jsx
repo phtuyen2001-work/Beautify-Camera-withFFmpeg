@@ -1,45 +1,80 @@
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useMemo, useEffect, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import EditsContainer from './EditsContainer'
 import SliderBox from './slider/SliderBox'
+import { useDispatch, useSelector } from 'react-redux'
+import { setContrast, setSaturation, setBrightness, setBlur, setNegative, setFlyeye } from '../../redux/slice/canvasSlice'
 
-const OptionsContainer = (props) => {
-    const contrastRef = useRef()
-    const saturationRef = useRef()
-    const brightnessRef = useRef()
-    const blurRef = useRef()
-    const negativeRef = useRef()
-    const flyeyeRef = useRef()
-    const options = useMemo(() => ([
+const OptionsContainer = () => {
+    const dispatch = useDispatch()
+    const effectsSelector = useSelector(state => state.canvasCam)
+
+    const options = useMemo(() => [
         {
             title: "Contrast",
-            ref: contrastRef
+            initialValue: 1,
+            minimumValue: 0,
+            maximumValue: 4,
+            step: 0.1,
+            setValueFunction: (newValue) => dispatch(setContrast(newValue))
         },
         {
             title: "Saturation",
-            ref: saturationRef
+            initialValue: 1,
+            minimumValue: 0,
+            maximumValue: 10,
+            step: 0.1,
+            setValueFunction: (newValue) => dispatch(setSaturation(newValue))
         },
         {
             title: "Brightness",
-            ref: brightnessRef
+            initialValue: 1,
+            minimumValue: 0,
+            maximumValue: 4,
+            step: 0.1,
+            setValueFunction: (newValue) => dispatch(setBrightness(newValue))
         },
         {
             title: "Blur",
-            ref: blurRef
+            initialValue: 0,
+            minimumValue: 0,
+            maximumValue: 6,
+            step: 0.05,
+            setValueFunction: (newValue) => dispatch(setBlur(newValue))
         },
         {
             title: "Negative",
-            ref: negativeRef
+            initialValue: 0,
+            minimumValue: 0,
+            maximumValue: 1,
+            step: 0.05,
+            setValueFunction: (newValue) => dispatch(setNegative(newValue))
         },
         {
             title: "Flyeye",
-            ref: flyeyeRef
+            initialValue: 0,
+            minimumValue: 0,
+            maximumValue: 1,
+            step: 0.05,
+            setValueFunction: (newValue) => dispatch(setFlyeye(newValue))
         },
-    ]), [])
+    ], [])
 
+    const sliderSheetRef = useRef()
+    // const [arrEffects, setArrEffects] = useState([])
+    const [selectedEffect, setSelectedEffect] = useState({
+        title: "",
+        initialValue: 0,
+        minimumValue: 0,
+        maximumValue: 0,
+        step: 0,
+        setValueFunction: () => {},
+        value: 0
+    })
 
-    const handleOpenSheetModal = (ref) => {
-        ref.current?.snapToIndex(0)
+    const handleOpenSheetModal = (index) => {
+        setSelectedEffect({ ...options[index], value: effectsSelector[options[index].title.toLowerCase()] })
+        sliderSheetRef.current.snapToIndex(0)
     }
 
     return (
@@ -59,7 +94,7 @@ const OptionsContainer = (props) => {
                         return (
                             <TouchableOpacity
                                 key={index}
-                                onPress={() => handleOpenSheetModal(item.ref)}
+                                onPress={() => handleOpenSheetModal(index)}
                             >
                                 <Text style={styles.optionText}>{item.title}</Text>
                             </TouchableOpacity>
@@ -68,61 +103,9 @@ const OptionsContainer = (props) => {
                 </ScrollView>
             </View>
 
-            <EditsContainer sheetRef={contrastRef}>
+            <EditsContainer sheetRef={sliderSheetRef}>
                 <SliderBox
-                    initialValue={1}
-                    minimumValue={0}
-                    maximumValue={4}
-                    step={0.1}
-                    title="contrast"
-                />
-            </EditsContainer>
-
-            <EditsContainer sheetRef={saturationRef}>
-                <SliderBox
-                    initialValue={1}
-                    minimumValue={0}
-                    maximumValue={10}
-                    step={0.1}
-                    title="saturation"
-                />
-            </EditsContainer>
-
-            <EditsContainer sheetRef={brightnessRef}>
-                <SliderBox
-                    initialValue={1}
-                    minimumValue={0}
-                    maximumValue={4}
-                    step={0.1}
-                    title="brightness"
-                />
-            </EditsContainer>
-
-            <EditsContainer sheetRef={blurRef}>
-                <SliderBox
-                    initialValue={0}
-                    minimumValue={0}
-                    maximumValue={6}
-                    title="blur"
-                />
-            </EditsContainer>
-
-            <EditsContainer sheetRef={negativeRef}>
-                <SliderBox
-                    initialValue={0}
-                    minimumValue={0}
-                    maximumValue={1}
-                    title="negative"
-                />
-            </EditsContainer>
-
-            <EditsContainer sheetRef={flyeyeRef}>
-                <SliderBox
-                    step={0.1}
-                    initialValue={0}
-                    minimumValue={0}
-                    maximumValue={1}
-                    title="flyeye"
+                    {...selectedEffect}
                 />
             </EditsContainer>
         </>

@@ -20,13 +20,15 @@ const TextBox = (props) => {
         dispatch(addText({ 
             id: textIndex++, 
             content: "insert text",
-            color: "#000" 
+            textColor: "red",
+            fontSize: 17 
         }))
+        handleClose()
     }
 
     const handleRemoveAllText = () => {
         dispatch(resetText())
-        
+        handleClose()
     }
 
     return (

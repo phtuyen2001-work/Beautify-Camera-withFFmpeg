@@ -18,7 +18,8 @@ export const canvasSlice = createSlice({
         flyeye: 0,
 
         stickers: [],
-        texts: []
+        texts: [],
+        selectedText: {}
     },
     reducers: {
         setContrast: (state, action) => {
@@ -59,6 +60,12 @@ export const canvasSlice = createSlice({
         addText: (state, action) => {
             state.texts = [...state.texts, action.payload]
         },
+        setSeletedText: (state, action) => {
+            state.selectedText = { ...action.payload }
+        },
+        changeTextbyId: (state, action) => {
+            console.log(action.payload);
+        },
         removeText: (state, action) => {
             state.texts = [...state.texts].filter((item) => item.id !== action.payload)
         },
@@ -83,13 +90,14 @@ export const canvasSlice = createSlice({
 
             state.stickers = []
             state.texts = []
+            state.selectedText = {}
         }
     }
 });
 
 export const {
     setColorMatrix, setColorOffset,
-    setContrast, setSaturation, setBrightness, 
+    setContrast, setSaturation, setBrightness,
     setBlur,
     setNegative,
     setFlyeye,
@@ -101,6 +109,8 @@ export const {
     addText,
     removeText,
     resetText,
+    changeTextbyId,
+    setSeletedText,
 
     resetCanvas
 } = canvasSlice.actions

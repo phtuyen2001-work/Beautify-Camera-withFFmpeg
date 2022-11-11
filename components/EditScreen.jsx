@@ -17,6 +17,7 @@ import { showToast } from './CustomToast';
 import ImageZoom from 'react-native-image-pan-zoom';
 import DraggableSticker from './InsertableItems/DraggableSticker';
 import DraggableText from './InsertableItems/DraggableText';
+import EditInsertibleContainer from './Filters/EditInsertible/EditInsertibleContainer';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 const PotentialHeight = windowHeight * 0.95
@@ -37,6 +38,7 @@ const EditScreen = ({ route, navigation }) => {
     const surfaceRef = useRef()
     const viewRef = useRef()
     const videoRef = useRef()
+    const editInsertibleRef = useRef()
 
     const dispatch = useDispatch()
     const stickerSelector = useSelector(state => state.canvasCam.stickers)
@@ -127,9 +129,8 @@ const EditScreen = ({ route, navigation }) => {
         return textSelector.map((item, index) => (
             <DraggableText
                 key={index}
-                id={item.id}
-                textColor={item.color}
-                content={item.content}
+                text={item}
+                editSheetRef={editInsertibleRef}
                 surfaceSize={surfaceSize}
             />
         ))
@@ -242,6 +243,11 @@ const EditScreen = ({ route, navigation }) => {
 
             {contentType === "image" &&
                 <FiltersControl />}
+
+            {textSelector.length > 0 &&
+                <EditInsertibleContainer
+                    sheetRef={editInsertibleRef}
+                />}
         </View>
     )
 }

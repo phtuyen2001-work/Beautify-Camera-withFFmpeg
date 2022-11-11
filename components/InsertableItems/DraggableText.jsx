@@ -2,13 +2,13 @@ import { StyleSheet, Text, TextInput } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import Draggable from 'react-native-draggable'
 import { useDispatch } from 'react-redux'
-import { removeText } from '../../redux/slice/canvasSlice'
+import { removeText, setSeletedText } from '../../redux/slice/canvasSlice'
 
 const DraggableText = (props) => {
-    const { id, surfaceSize, textColor, content } = props
+    const { text, surfaceSize, editSheetRef } = props
     const dispatch = useDispatch()
 
-    const [textValue, setTextValue] = useState(content)
+    const [textValue, setTextValue] = useState(text.content)
     const [isEditting, setIsEditting] = useState(false)
 
     useEffect(() => {
@@ -25,7 +25,8 @@ const DraggableText = (props) => {
     }
 
     const handleOnLongPressText = () => {
-        console.log("long press");
+        dispatch(setSeletedText(text))
+        editSheetRef.current.snapToIndex(0)
     }
 
     const handleOnChangeInput = (text) => {
@@ -44,7 +45,7 @@ const DraggableText = (props) => {
             {isEditting === false ?
                 <Text
                     ref={textRef}
-                    style={[styles.text, { color: textColor }]}
+                    style={[styles.textStyle, { color: text.textColor }]}
                     onPress={handlePressText}
                     onLongPress={handleOnLongPressText}
                 >
@@ -52,7 +53,7 @@ const DraggableText = (props) => {
                 </Text> :
                 <TextInput
                     ref={inputRef}
-                    style={[styles.text, { color: textColor }]}
+                    style={[styles.textStyle, { color: text.textColor }]}
                     value={textValue}
                     onChangeText={handleOnChangeInput}
                     onEndEditing={onEndEditInput}
@@ -65,7 +66,7 @@ const DraggableText = (props) => {
 export default DraggableText
 
 const styles = StyleSheet.create({
-    text: {
+    textStyle: {
         fontSize: 17,
         fontWeight: "600"
     }

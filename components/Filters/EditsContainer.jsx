@@ -3,7 +3,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useEffect } from 'react'
 
 const EditsContainer = (props) => {
-    const { children, sheetRef, title } = props
+    const { children, sheetRef, title, ...configures } = props
 
     useEffect(() => {
         sheetRef.current?.present()
@@ -39,6 +39,7 @@ const EditsContainer = (props) => {
             handleIndicatorStyle={{
                 backgroundColor: "#fff"
             }}
+            {...configures}
         >
             {childrenWithProps}
         </BottomSheetModal>

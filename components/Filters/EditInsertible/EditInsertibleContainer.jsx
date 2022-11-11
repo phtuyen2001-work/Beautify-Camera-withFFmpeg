@@ -4,15 +4,13 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import ResetSVG from '../../SVG/ResetSVG';
 import TextColorSVG from '../../SVG/TextColorSVG';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeTextbyId, removeText, setSeletedText } from '../../../redux/slice/canvasSlice';
+import { removeText, setSeletedText } from '../../../redux/slice/canvasSlice';
 import EditsContainer from '../EditsContainer';
-import SliderBox from '../slider/SliderBox';
 import ColorsBox from './ColorsBox';
 
 const EditInsertibleContainer = (props) => {
     const { sheetRef } = props
     const dispatch = useDispatch()
-    const textSelector = useSelector(state => state.canvasCam.texts)
     const selectedTextSelector = useSelector(state => state.canvasCam.selectedText)
 
     const colorSheetRef = useRef()

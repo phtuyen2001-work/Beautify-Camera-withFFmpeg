@@ -62,9 +62,14 @@ export const canvasSlice = createSlice({
         },
         setSeletedText: (state, action) => {
             state.selectedText = { ...action.payload }
+
+            let ind = state.texts.findIndex(e => e.id === state.selectedText.id)
+            state.texts[ind] = { ...state.selectedText }
         },
-        changeTextbyId: (state, action) => {
-            console.log(action.payload);
+        changeText: (state, action) => {
+            let ind = state.texts.findIndex(e => e.id === action.payload.id)
+            state.texts[ind] = { ...action.payload }
+
         },
         removeText: (state, action) => {
             state.texts = [...state.texts].filter((item) => item.id !== action.payload)
@@ -88,7 +93,7 @@ export const canvasSlice = createSlice({
             state.negative = 0
             state.flyeye = 0,
 
-            state.stickers = []
+                state.stickers = []
             state.texts = []
             state.selectedText = {}
         }
@@ -109,7 +114,7 @@ export const {
     addText,
     removeText,
     resetText,
-    changeTextbyId,
+    changeText,
     setSeletedText,
 
     resetCanvas

@@ -38,17 +38,30 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to take photos and record video",
-        "NSPhotoLibraryAddUsageDescription": "This app uses the media library to select photos, videos and save them"
-      }
+        "NSPhotoLibraryAddUsageDescription": "Allow this app to save photos.",
+        "NSPhotoLibraryUsageDescription": "Allow this app to access your photos."
+      },
+      "bundleIdentifier": "com.phtuyen2001work.beautifycamera"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "95946993-abef-4fc1-b55e-602e24a03014"
+      }
     }
   }
 }

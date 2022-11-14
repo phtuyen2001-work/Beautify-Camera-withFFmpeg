@@ -1,13 +1,19 @@
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
+import * as ImagePicker from "expo-image-picker"
+import * as MediaLibrary from 'expo-media-library';
+import { useDispatch } from 'react-redux';
+import { resetCanvas } from '../redux/slice/canvasSlice';
+
 import CameraComponent from './CameraComponent';
 import SideControl from './SideControl';
 import { showToast } from './CustomToast';
-import { useDispatch } from 'react-redux';
-import * as ImagePicker from "expo-image-picker"
-import { resetCanvas } from '../redux/slice/canvasSlice';
-import * as MediaLibrary from 'expo-media-library';
+
 import CameraAltSVG from './SVG/CameraAltSVG';
+
+/**
+ * CameraScreen
+ */
 
 export default function CameraScreen({ navigation }) {
   const dispatch = useDispatch()
@@ -22,7 +28,6 @@ export default function CameraScreen({ navigation }) {
   const [previewImg, setPreviewImg] = useState(() => getPreviewPhoto())
 
   const camera = useRef()
-
 
   //Get the newest photo for previewPhoto view
   async function getPreviewPhoto() {

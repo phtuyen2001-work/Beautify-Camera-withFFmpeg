@@ -1,10 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useRef } from 'react'
-import StickerSVG from '../SVG/StickerSVG'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+
 import EditsContainer from './EditsContainer'
+
+import StickerSVG from '../SVG/StickerSVG'
 import StickersBox from './StickersBox'
 import TextSVG from '../SVG/TextSVG'
 import TextBox from './TextBox'
+
+/**
+ * InsertibleContainer - jsx
+ */
 
 const InsertibleContainer = () => {
     const stickerRef = useRef()

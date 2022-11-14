@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+/**
+ * CanvasSlice - js
+ */
+
 export const canvasSlice = createSlice({
     name: "canvas",
     initialState: {

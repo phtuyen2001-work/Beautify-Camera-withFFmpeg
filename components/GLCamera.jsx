@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useReducer } from 'react'
 import { GLSL, Node, Shaders } from 'gl-react';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera } from 'expo-camera';
 
 const shader = Shaders.create({
     YFlip: {
@@ -15,6 +15,7 @@ const shader = Shaders.create({
 })
 
 const GLCamera = (props) => {
+    const { camType, flashMode }  = props
     const cameraRef = useMemo(() => props.cameraRef, [])
 
     // force update tricks for functional components
@@ -28,7 +29,7 @@ const GLCamera = (props) => {
         }
         loop()
         return () => {
-            console.log("cancel");
+            // console.log("cancel");
             cancelAnimationFrame(stopId)
         }
     }, [])
@@ -45,7 +46,8 @@ const GLCamera = (props) => {
             <Camera
                 ref={cameraRef}
                 style={{ flex: 1 }}
-                type={CameraType.back}
+                type={camType}
+                flashMode={flashMode}
             />
         </Node>
     )

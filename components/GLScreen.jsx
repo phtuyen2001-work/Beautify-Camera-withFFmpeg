@@ -1,48 +1,62 @@
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { Surface } from 'gl-react-expo'
-import Effects from './Effects/Effects'
-import GLCamera from './GLCamera'
-import FiltersControl from './FiltersControl'
+import { CameraType } from 'expo-camera'
+import { captureRef } from 'react-native-view-shot'
 import BottomSheet from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native'
+
+import Effects from './Effects/Effects'
+import FiltersControl from './FiltersControl'
+import GLCamera from './GLCamera'
 import SideControl from './SideControl'
+import { showToast } from './CustomToast'
+
 import EditSVG from './SVG/EditSVG';
 import CameraSVG from './SVG/CameraSVG'
-import { captureRef } from 'react-native-view-shot'
-import { showToast } from './CustomToast'
-import { useNavigation } from '@react-navigation/native'
+import SwitchSVG from './SVG/SwitchSVG'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 
+/**
+ * GLScreen - jsx
+ */
 
-const GLScreen = (props) => {
+const GLScreen = () => {
+    const [camType, setCamType] = useState(CameraType.back)
+
     const navigation = useNavigation()
 
     const surfaceRef = useRef()
     const cameraRef = useRef()
     const filtersControlRef = useRef()
 
-    const snapPoints = useMemo(() => ["5%", "20%"], [])
+    const snapPoints = useMemo(() => ["8%", "20%"], [])
 
-    const handleLeftBtn = useCallback(() => {
+    const handleLeftBtn = () => {
         navigation.goBack()
-    }, [])
+    }
 
-    const handleRightBtn = useCallback(() => {
+    const handleRightBtn = () => {
         filtersControlRef.current?.snapToIndex(0)
-    }, [])
+    }
 
-    const takePhoto = useCallback(
-        async () => {
-            if (!cameraRef) return
+    //Flip the camera type (back and front)
+    const flipCameraType = () => {
+        setCamType((current) => (
+            current === CameraType.back ? CameraType.front : CameraType.back
+        ))
+    }
 
-            const uri = await captureRef(surfaceRef, {
-                format: "jpg",
-            })
-            showToast("Clicked!")
-            navigation.navigate("EditScreen", { uri, type: "image" })
-        }, []
-    )
+    const takePhoto = async () => {
+        if (!cameraRef) return
+
+        const uri = await captureRef(surfaceRef, {
+            format: "jpg",
+        })
+        showToast("Clicked!")
+        navigation.navigate("EditScreen", { uri, type: "image" })
+    }
 
     return (
         <View style={styles.container}>
@@ -51,7 +65,10 @@ const GLScreen = (props) => {
                 ref={surfaceRef}
             >
                 <Effects>
-                    <GLCamera cameraRef={cameraRef} />
+                    <GLCamera
+                        camType={camType}
+                        cameraRef={cameraRef}
+                    />
                 </Effects>
             </Surface>
 
@@ -67,6 +84,11 @@ const GLScreen = (props) => {
                     backgroundColor: "#fff"
                 }}
             >
+                <View style={styles.camControlContainer}>
+                    <TouchableOpacity onPress={flipCameraType}>
+                        <SwitchSVG />
+                    </TouchableOpacity>
+                </View>
                 <SideControl
                     leftBtn={
                         <View style={[styles.sideBtns, { padding: 4 }]}>
@@ -104,6 +126,15 @@ export default GLScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    camControlContainer: {
+        width: "100%",
+        backgroundColor: "#000",
+        display: "flex",
+        flexDirection: "row-reverse",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 20
     },
 
     actionBtn: {

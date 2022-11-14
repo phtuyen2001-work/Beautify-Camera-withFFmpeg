@@ -1,15 +1,17 @@
 import React, { useMemo, useRef } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import FilterSVG from './SVG/FilterSVG'
-import OptionSVG from './SVG/OptionSVG'
-import BottomSheet from '@gorhom/bottom-sheet';
-import FiltersBox from './Filters/FiltersBox'
-import OptionsContainer from './Filters/OptionsContainer'
-import ResetSVG from './SVG/ResetSVG'
 import { useDispatch } from 'react-redux'
 import { resetCanvas } from '../redux/slice/canvasSlice';
-import { showToast } from './CustomToast';
+import BottomSheet from '@gorhom/bottom-sheet';
+
 import InsertibleContainer from './Filters/InsertibleContainer';
+import OptionsContainer from './Filters/OptionsContainer'
+import FiltersBox from './Filters/FiltersBox'
+import { showToast } from './CustomToast';
+
+import OptionSVG from './SVG/OptionSVG'
+import FilterSVG from './SVG/FilterSVG'
+import ResetSVG from './SVG/ResetSVG'
 import InsertSVG from './SVG/InsertSVG';
 
 const bottomSheetSetting = {
@@ -24,6 +26,15 @@ const bottomSheetSetting = {
         backgroundColor: "#fff"
     },
 }
+
+/**
+ * FiltersControl - jsx
+ * @prop {object} filtersControlRef - the ref of the FiltersControl
+ * @prop {boolean} disableFilter - to disable the Filter box
+ * @prop {boolean} disableOption - to disable the Option box
+ * @prop {boolean} disableInsertible - to disable the Insertible box
+ * @prop {boolean} to - to decide that FiltersControl can be able to stay at the minimum of 5% of height 
+ */
 
 const FiltersControl = (props) => {
     const {

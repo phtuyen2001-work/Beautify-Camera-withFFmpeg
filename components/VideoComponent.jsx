@@ -1,38 +1,19 @@
 import React, { useState } from 'react'
-import { Video } from 'expo-av'
 import { TouchableOpacity, View } from 'react-native'
-import PlaySVG from './SVG/PlaySVG'
-import PauseSVG from './SVG/PauseSVG'
+import { Video } from 'expo-av'
+
+// import PlaySVG from './SVG/PlaySVG'
+// import PauseSVG from './SVG/PauseSVG'
+
+/**
+ * VideoComponent - jsx
+ * @prop {object} videoRef - the ref of the Video component
+ */
 
 const VideoComponent = (props) => {
     const { onFrame, videoRef, ...rest } = props
 
     const [videoStatus, setVideoStatus] = useState({})
-
-    /**
-     * To handle the status of video
-     */
-    // const togglePlay = () => {
-    //     if (videoStatus.isPlaying) {
-    //         videoRef.current?.pauseAsync()
-    //     }
-    //     else {
-    //         videoRef.current?.playAsync()
-    //     }
-
-    //     setTimeout(() => {
-            
-    //     }, 2000)
-    // }
-
-    // const renderIcon = () => {
-    //     if(videoStatus.isPlaying) {
-    //         return <PauseSVG />
-    //     }
-    //     else {
-    //         return <PlaySVG />
-    //     }
-    // }
 
     return (
         <Video
@@ -44,20 +25,6 @@ const VideoComponent = (props) => {
             onPlaybackStatusUpdate={status => setVideoStatus(() => status)}
             {...rest}
         >
-            {/* <View
-                style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: 'center',
-                    zIndex: 1,
-                }}
-            >
-                <TouchableOpacity
-                    onPress={togglePlay}
-                >
-                    {renderIcon()}
-                </TouchableOpacity>
-            </View> */}
         </Video>
     )
 }

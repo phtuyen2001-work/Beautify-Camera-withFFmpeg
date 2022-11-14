@@ -1,120 +1,27 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
-import CloseSVG from '../SVG/CloseSVG';
-import CheckSVG from '../SVG/CheckSVG';
-import { Surface } from 'gl-react-expo';
-import ColorMatrix from '../Effects/ColorMatrix';
-import GLImage from 'gl-react-image';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { useDispatch } from 'react-redux';
 import { setColorMatrix, setColorOffset } from '../../redux/slice/canvasSlice';
 
-const img = require("../../assets/photo.jpeg")
 
-const filters = [
-    {
-        name: "Normal",
-        matrix: [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1,
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Juno",
-        matrix: [
-            1, -0.4, 0, 0,
-            0, 1.3, 0, 0,
-            0, -0.4, 1, 0,
-            0, 0.2, 0, 1,
-        ],
-        offset: [0, -0.1, 0, 0]
-    },
-    {
-        name: "Sepia",
-        matrix: [
-            0.393, 0.349, 0.272, 0,
-            0.769, 0.686, 0.534, 0,
-            0.189, 0.168, 0.131, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Grayscale",
-        matrix: [
-            0.259, 0.259, 0.259, 0,
-            0.7152, 0.7152, 0.7152, 0,
-            0.0722, 0.0722, 0.0722, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Gingham",
-        matrix: [
-            2, 1, 0.5, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Mayfair",
-        matrix: [
-            1, 0, 0.5, 0,
-            1, 0.5, 0.5, 0,
-            0.5, 1, 1, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Valencia",
-        matrix: [
-            1, -0.2, -0.8, 0,
-            0, 1, 1.6, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Nvision",
-        matrix: [
-            0.1, 0.3, 0, 0,
-            0.4, 1, 0, 0,
-            0, 0.3, 0.1, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Warm",
-        matrix: [
-            1.06, 0, 0, 0,
-            0, 1.01, 0, 0,
-            0, 0, 0.93, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-    {
-        name: "Cool",
-        matrix: [
-            0.99, 0, 0, 0,
-            0, 0.93, 0, 0,
-            0, 0, 1.08, 0,
-            0, 0, 0, 1
-        ],
-        offset: [0, 0, 0, 0]
-    },
-]
+import { Surface } from 'gl-react-expo';
+import GLImage from 'gl-react-image';
+import ColorMatrix from '../Effects/ColorMatrix';
+
+import CloseSVG from '../SVG/CloseSVG';
+import CheckSVG from '../SVG/CheckSVG';
+const img = require("../../assets/photo.jpeg")
+import filters from './Filters';
+
+/**
+ * FiltersBox - jsx
+ * @prop {string} title - The title of the box
+ * @prop {object} sheetRef - The ref of the sheet contains the box
+ */
 
 export default function FiltersBox(props) {
     const { title, sheetRef } = props
+
     const [selectedFilter, setSelectedFilter] = useState("Normal")
 
     const dispatch = useDispatch()

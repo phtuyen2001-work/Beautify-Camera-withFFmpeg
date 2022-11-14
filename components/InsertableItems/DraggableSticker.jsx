@@ -1,8 +1,16 @@
-import { StyleSheet } from 'react-native'
 import React from 'react'
-import Draggable from 'react-native-draggable'
+import { StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { removeSticker } from '../../redux/slice/canvasSlice'
+
+import Draggable from 'react-native-draggable'
+
+/**
+ * DraggableSticker - jsx
+ * @prop {string} id - id of the sticker
+ * @prop {*} imgSrc - image source for sticker
+ * @prop {object} surfaceSize - the surface which contains the stickers
+ */
 
 const DraggableSticker = (props) => {
     const { id, imgSrc, surfaceSize } = props

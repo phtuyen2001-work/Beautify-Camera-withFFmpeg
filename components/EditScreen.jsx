@@ -2,19 +2,19 @@ import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import FiltersControl from './FiltersControl'
 import { useDispatch, useSelector } from 'react-redux';
-import { resetCanvas } from '../redux/slice/canvasSlice';
 import { manipulateAsync } from 'expo-image-manipulator';
 import * as MediaLibrary from 'expo-media-library';
+import ImageZoom from 'react-native-image-pan-zoom';
+import { resetCanvas } from '../redux/slice/canvasSlice';
+import { captureRef } from 'react-native-view-shot';
 
 //Import components from gl-react
 import GLImage from "gl-react-image";
 import { Surface } from "gl-react-expo";
 import Effects from './Effects/Effects';
-import { captureRef } from 'react-native-view-shot';
 
 import VideoComponent from './VideoComponent';
 import { showToast } from './CustomToast';
-import ImageZoom from 'react-native-image-pan-zoom';
 import DraggableSticker from './InsertableItems/DraggableSticker';
 import DraggableText from './InsertableItems/DraggableText';
 import EditInsertibleContainer from './Filters/EditInsertible/EditInsertibleContainer';
@@ -22,18 +22,16 @@ import EditInsertibleContainer from './Filters/EditInsertible/EditInsertibleCont
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 const PotentialHeight = windowHeight * 0.95
 
+/**
+ * EditScreen - jsx
+ */
+
 const EditScreen = ({ route, navigation }) => {
-    const [selected, setSeleted] = useState(null)
-    const [surfaceSize, setSurfaceSize] = useState({ width: 0, height: 0 })
+    
     const { type: contentType } = route.params
 
-    // const calculateHeight = () => selected?.height > PotentialHeight ? PotentialHeight : selected.height
-
-    // const calculateWidth = (width) => {
-    //     if (!width) return windowWidth
-    //     if (width <= windowWidth) return windowWidth
-    //     else return width
-    // }
+    const [selected, setSeleted] = useState(null)
+    const [surfaceSize, setSurfaceSize] = useState({ width: 0, height: 0 })
 
     const surfaceRef = useRef()
     const viewRef = useRef()
@@ -44,33 +42,17 @@ const EditScreen = ({ route, navigation }) => {
     const stickerSelector = useSelector(state => state.canvasCam.stickers)
     const textSelector = useSelector(state => state.canvasCam.texts)
 
-    // const getSize = async (uri) => {
-    //     return new Promise((resolve, reject) => {
-    //         Image.getSize(uri, (w, h) => {
-    //             resolve({
-    //                 uri: uri,
-    //                 width: w > windowWidth ? windowWidth : w,
-    //                 height: h > windowHeight ? windowHeight : h
-    //             })
-    //         }, async(error) => {
-    //             reject("Error", error)
-    //         })
-    //     })
-    // }
-
     useEffect(() => {
         const file = route.params
         if (file.type === "image") {
             Image.getSize(file.uri, async (w, h) => {
-                //resize the selected image before displaying it to the screen
-                const manipResult = await manipulateAsync(file.uri)
+                //resize the surface which is for displaying the result image
                 const surfaceManip = await manipulateAsync(
                     file.uri,
                     [{ resize: { width: windowWidth } }]
                 )
-                // const manipResult = await getSize(file.uri)
-                // console.log("file", file);
-                // console.log("manip", manipResult);
+                //resize the selected image before displaying it to the screen
+                const manipResult = await manipulateAsync(file.uri)
                 setSurfaceSize({
                     width: surfaceManip.width,
                     height: surfaceManip.height
@@ -92,9 +74,11 @@ const EditScreen = ({ route, navigation }) => {
         }
     }, [])
 
+    //To crop the image
     useEffect(() => {
         (async () => {
             const file = route.params
+            //Check if there are offset and size in route params
             if (file.offset && file.size) {
                 const manipResult = await manipulateAsync(
                     file.uri,
@@ -197,10 +181,7 @@ const EditScreen = ({ route, navigation }) => {
                     >
                         <View
                             ref={viewRef}
-                            style={[styles.surfaceContainer, {
-                                // width: surfaceSize.width,
-                                // height: surfaceSize.height
-                            }]}
+                            style={[styles.surfaceContainer]}
                         >
                             <View style={styles.stickerView}>
                                 {handleDisplaySticker()}
@@ -215,11 +196,7 @@ const EditScreen = ({ route, navigation }) => {
                                 }}
                             >
                                 <Effects width={selected.width} height={selected.height}>
-                                    <GLImage
-                                        // resizeMode={selected.width > windowWidth ? "cover" : "stretch"}
-                                        source={{ uri: selected?.uri }}
-                                    />
-                                    {/* {{ uri: selected?.uri }} */}
+                                    <GLImage source={{ uri: selected?.uri }} />
                                 </Effects>
                             </Surface>
                         </View>

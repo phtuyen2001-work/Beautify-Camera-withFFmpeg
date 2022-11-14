@@ -4,17 +4,23 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
-import EditScreen from './components/EditScreen';
-import CameraScreen from './components/CameraScreen';
-import AnimatedAppLoader from './components/SplashScreen/AnimatedAppLoader';
 import { store } from "./redux/store"
 import { RootSiblingParent } from 'react-native-root-siblings';
-import "webgltexture-loader-expo-camera";
+
+import AnimatedAppLoader from './components/SplashScreen/AnimatedAppLoader';
+import CameraScreen from './components/CameraScreen';
+import EditScreen from './components/EditScreen';
 import GLScreen from './components/GLScreen';
 import Cropper from './components/Cropper';
+
 // import "webgltexture-loader-expo"
+import "webgltexture-loader-expo-camera";
 
 const Stack = createNativeStackNavigator()
+
+/**
+ * App -js
+ */
 
 export default function App() {
   const image = {
@@ -38,7 +44,6 @@ export default function App() {
                   <Stack.Screen
                     name='CameraScreen'
                     component={CameraScreen}
-
                   />
                   <Stack.Screen
                     name='EditScreen'

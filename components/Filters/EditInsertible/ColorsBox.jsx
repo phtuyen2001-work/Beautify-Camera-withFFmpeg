@@ -1,17 +1,25 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+import { useDispatch, useSelector } from 'react-redux'
+import { setSeletedText } from '../../../redux/slice/canvasSlice'
+
 import CloseSVG from '../../SVG/CloseSVG'
 import CheckSVG from '../../SVG/CheckSVG'
-import { useDispatch, useSelector } from 'react-redux'
-import { changeText, setSeletedText } from '../../../redux/slice/canvasSlice'
-import { ScrollView } from 'react-native-gesture-handler'
 
 const colorArr = [
     "#000", "#fff", "red", "blue", "yellow", "green", "purple"
 ]
 
+/**
+ * ColorsBox - jsx
+ * @prop {object} sheetRef - The ref of the sheet that contains ColorsBox
+ * @prop {string} title - The title for the ColorsBox
+ */
+
 const ColorsBox = (props) => {
     const { sheetRef, title } = props
+
     const dispatch = useDispatch()
     const selectedTextSelector = useSelector(state => state.canvasCam.selectedText)
 

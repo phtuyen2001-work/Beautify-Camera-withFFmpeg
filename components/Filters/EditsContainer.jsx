@@ -1,6 +1,13 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useEffect } from 'react'
+
+/**
+ * EditsContainer - jsx
+ * @prop {object} sheetRef - The ref of the sheet contains the box
+ * @prop {string} title - The title of the box
+ * @prop {*} children
+ * @prop {*} - for configuring 
+ */
 
 const EditsContainer = (props) => {
     const { children, sheetRef, title, ...configures } = props

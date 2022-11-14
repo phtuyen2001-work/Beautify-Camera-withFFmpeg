@@ -1,17 +1,25 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import CheckSVG from '../SVG/CheckSVG'
-import CloseSVG from '../SVG/CloseSVG'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useDispatch } from 'react-redux'
 import { addSticker, resetSticker } from '../../redux/slice/canvasSlice'
 
 import { STICKERS } from '../../stickers/stickers'
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import CheckSVG from '../SVG/CheckSVG'
+import CloseSVG from '../SVG/CloseSVG'
 
+//To generate index for individual stickers
 let stickerIndex = 0
+
+/**
+ * StickerBox - jsx
+ * @prop {string} title - The title of the box
+ * @prop {object} sheetRef - The ref of the sheet contains the box
+ */
 
 const StickersBox = (props) => {
     const { title, sheetRef } = props
+
     const dispatch = useDispatch()
 
     const handleAddSticker = (item) => {

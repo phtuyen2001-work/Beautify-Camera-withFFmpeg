@@ -1,11 +1,17 @@
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, { useMemo, useRef, useState } from 'react'
-import EditsContainer from './EditsContainer'
-import SliderBox from './slider/SliderBox'
 import { useDispatch, useSelector } from 'react-redux'
 import { setContrast, setSaturation, setBrightness, setBlur, setNegative, setFlyeye } from '../../redux/slice/canvasSlice'
 
+import EditsContainer from './EditsContainer'
+import SliderBox from './slider/SliderBox'
+
+/**
+ * OptionsContainer - jsx
+ */
+
 const OptionsContainer = () => {
+
     const dispatch = useDispatch()
     const effectsSelector = useSelector(state => state.canvasCam)
 
@@ -61,7 +67,7 @@ const OptionsContainer = () => {
     ], [])
 
     const sliderSheetRef = useRef()
-    // const [arrEffects, setArrEffects] = useState([])
+
     const [selectedEffect, setSelectedEffect] = useState({
         title: "",
         initialValue: 0,
@@ -118,7 +124,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        // backgroundColor: "red"
     },
 
     scrollView: {

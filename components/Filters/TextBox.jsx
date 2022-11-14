@@ -1,15 +1,24 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import CloseSVG from '../SVG/CloseSVG'
-import PencilSVG from '../SVG/PencilSVG'
-import ResetSVG from '../SVG/ResetSVG'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { addText, resetText } from '../../redux/slice/canvasSlice'
 
+import CloseSVG from '../SVG/CloseSVG'
+import PencilSVG from '../SVG/PencilSVG'
+import ResetSVG from '../SVG/ResetSVG'
+
+//To generate index for individual texts
 let textIndex = 0
+
+/**
+ * TextBox - jsx
+ * @prop {string} title - The title of the box
+ * @prop {object} sheetRef - The ref of the sheet contains the box
+ */
 
 const TextBox = (props) => {
     const { title, sheetRef } = props
+
     const dispatch = useDispatch()
 
     const handleClose = () => {

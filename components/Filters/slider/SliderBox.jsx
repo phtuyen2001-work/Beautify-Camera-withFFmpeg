@@ -1,8 +1,22 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+
 import Slider from '@react-native-community/slider'
+
 import CloseSVG from '../../SVG/CloseSVG'
 import CheckSVG from '../../SVG/CheckSVG'
+
+/**
+ * SliderBox - jsx
+ * @prop {object} sheetRef - The ref of the sheet that contains the SliderBox
+ * @prop {string} title - The title for the SliderBox
+ * @prop {number} initialValue
+ * @prop {number} minimumValue
+ * @prop {number} maximumValue
+ * @prop {number} step
+ * @prop {number} value - the value that needs to change
+ * @prop {function} setValueFunction - the function for setting the value
+ */
 
 const SliderBox = (props) => {
     const {

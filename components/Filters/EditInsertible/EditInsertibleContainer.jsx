@@ -1,15 +1,23 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useMemo, useRef } from 'react'
 import BottomSheet from '@gorhom/bottom-sheet';
-import ResetSVG from '../../SVG/ResetSVG';
-import TextColorSVG from '../../SVG/TextColorSVG';
-import { useDispatch, useSelector } from 'react-redux';
 import { removeText, setSeletedText } from '../../../redux/slice/canvasSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 import EditsContainer from '../EditsContainer';
 import ColorsBox from './ColorsBox';
 
+import TextColorSVG from '../../SVG/TextColorSVG';
+import ResetSVG from '../../SVG/ResetSVG';
+
+/**
+ * EditInsertibleContainer - jsx
+ * @prop {object} sheetRef - The ref for the EditInsertibleContainer
+ */
+
 const EditInsertibleContainer = (props) => {
     const { sheetRef } = props
+    
     const dispatch = useDispatch()
     const selectedTextSelector = useSelector(state => state.canvasCam.selectedText)
 

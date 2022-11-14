@@ -1,16 +1,22 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlipType, manipulateAsync } from 'expo-image-manipulator'
+import { useNavigation } from '@react-navigation/native'
+
 import ImageCrop from '@mtourj/react-native-image-crop'
-import CloseSVG from './SVG/CloseSVG'
-import CheckSVG from './SVG/CheckSVG'
+
 import HorizontalFlipSVG from './SVG/HorizontalFlipSVG'
 import VerticalFlipSVG from './SVG/VerticalFlipSVG'
-import { useNavigation } from '@react-navigation/native'
-import { FlipType, manipulateAsync } from 'expo-image-manipulator'
-import { useRef } from 'react'
+import CloseSVG from './SVG/CloseSVG'
+import CheckSVG from './SVG/CheckSVG'
+
+/**
+ * Cropper - jsx
+ */
 
 const Cropper = (props) => {
     const { imgSrc, imageWidth, imageHeight } = props.route.params
+
     const navigation = useNavigation()
     const cropperRef = useRef()
 
@@ -29,7 +35,6 @@ const Cropper = (props) => {
             offset: cropResult.offset,
             size: cropResult.size
         })
-        // console.log(cropResult);
     }
 
     const handleHorizontalFlip = async () => {

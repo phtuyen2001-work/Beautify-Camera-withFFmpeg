@@ -24,6 +24,7 @@ const CameraComponent = React.memo((props) => {
         ))
     }
 
+    //To handle flash mode when press
     const handleFlashMode = () => {
         if (flash === FlashMode.off) { 
             setFlash(FlashMode.on)
@@ -39,6 +40,7 @@ const CameraComponent = React.memo((props) => {
         }
     }
 
+    //To display flash mode icon based on the flash mode state
     const flashModeIcon = () => {
         switch (flash) {
             case FlashMode.off:

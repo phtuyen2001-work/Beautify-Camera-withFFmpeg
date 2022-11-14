@@ -1,10 +1,17 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
+/**
+ * SideControl - jsx
+ * @prop {*} leftBtn - render componets on the left side of SideControl
+ * @prop {function} leftBtnFunc - function of the left button when pressed
+ * @prop {*} rightBtn - render componets on the right side of SideControl
+ * @prop {function} rightBtnFunc - function of the right button when pressed
+ */
+
 const SideControl = (props) => {
     const { leftBtn, leftBtnFunc, 
         rightBtn, rightBtnFunc, 
-         
     } = props
 
     return (
@@ -14,12 +21,6 @@ const SideControl = (props) => {
                     // style={styles}
                     onPress={leftBtnFunc}
                 >
-                    {/* <Image
-                        style={styles.libraryImg}
-                        source={{
-                            uri: previewImg ? previewImg.localUri : "../assets/photo.jpeg"
-                        }}
-                    /> */}
                     {leftBtn}
                 </TouchableOpacity>
 

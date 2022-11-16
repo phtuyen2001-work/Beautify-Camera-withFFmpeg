@@ -61,7 +61,7 @@ const StickersBox = (props) => {
                         >
                             <Image
                                 source={item.src}
-                                style={{ width: 50, height: 50 }}
+                                style={{ width: 55, height: 55 }}
                             />
                         </TouchableOpacity>
                     ))}

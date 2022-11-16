@@ -1,5 +1,5 @@
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
 import FiltersControl from './FiltersControl'
 import { useDispatch, useSelector } from 'react-redux';
 import { manipulateAsync } from 'expo-image-manipulator';
@@ -18,6 +18,7 @@ import { showToast } from './CustomToast';
 import DraggableSticker from './InsertableItems/DraggableSticker';
 import DraggableText from './InsertableItems/DraggableText';
 import EditInsertibleContainer from './Filters/EditInsertible/EditInsertibleContainer';
+import CropSVG from './SVG/CropSVG';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 const PotentialHeight = windowHeight * 0.95
@@ -27,7 +28,7 @@ const PotentialHeight = windowHeight * 0.95
  */
 
 const EditScreen = ({ route, navigation }) => {
-    
+
     const { type: contentType } = route.params
 
     const [selected, setSeleted] = useState(null)
@@ -153,15 +154,15 @@ const EditScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             <View style={styles.top}>
                 <Text onPress={handleCancel} style={styles.topText}>Cancel</Text>
-                {contentType === "image" && <Text
-                    style={[styles.topText]}
-                    onPress={() => navigation.navigate("Cropper", {
-                        imgSrc: selected.uri,
-                        imageWidth: selected.width,
-                        imageHeight: selected.height
-                    })}>
-                    Crop
-                </Text>}
+                {contentType === "image" &&
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Cropper", {
+                            imgSrc: selected.uri,
+                            imageWidth: selected.width,
+                            imageHeight: selected.height
+                        })}>
+                        <CropSVG />
+                    </TouchableOpacity>}
                 <Text onPress={handleSave} style={styles.topText}>Save</Text>
             </View>
 
@@ -219,7 +220,7 @@ const EditScreen = ({ route, navigation }) => {
             </View>
 
             {contentType === "image" &&
-                <FiltersControl />}
+                <FiltersControl transparent={0.8}/>}
 
             {textSelector.length > 0 &&
                 <EditInsertibleContainer
@@ -232,7 +233,7 @@ const EditScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#000"
+        backgroundColor: "#000",
     },
     top: {
         height: (windowHeight * 0.05),

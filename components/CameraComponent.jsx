@@ -26,9 +26,9 @@ const CameraComponent = React.memo((props) => {
 
     //To handle flash mode when press
     const handleFlashMode = () => {
-        if (flash === FlashMode.off) { 
+        if (flash === FlashMode.off) {
             setFlash(FlashMode.on)
-            showToast("Flash on") 
+            showToast("Flash on")
         }
         else if (flash === FlashMode.on) {
             setFlash(FlashMode.auto)
@@ -98,11 +98,17 @@ const CameraComponent = React.memo((props) => {
                 {...props}
             >
                 <View style={styles.topView}>
-                    <TouchableOpacity onPress={flipCameraType}>
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={flipCameraType}
+                    >
                         <SwitchSVG />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={handleFlashMode}>
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={handleFlashMode}
+                    >
                         {flashModeIcon()}
                     </TouchableOpacity>
                 </View>
@@ -114,15 +120,25 @@ const CameraComponent = React.memo((props) => {
 export default CameraComponent
 
 const styles = StyleSheet.create({
-    topView: {
-        top: 5,
-        display: "flex",
-        flexDirection: "row-reverse",
-        justifyContent: "space-between",
-        width: "100%",
-        padding: 5,
-    },
     camera: {
         flex: 1,
     },
+    topView: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: 40,
+        borderRadius: 90,
+        paddingVertical: 5,
+
+        backgroundColor: "rgba(22, 20, 19, 0.5)",
+    },
+    btn: {
+        marginVertical: 5
+    }
 });

@@ -31,7 +31,7 @@ const GLScreen = () => {
     const cameraRef = useRef()
     const filtersControlRef = useRef()
 
-    const snapPoints = useMemo(() => ["8%", "20%"], [])
+    const snapPoints = useMemo(() => ["3%", "8%", "20%"], [])
 
     const handleLeftBtn = () => {
         navigation.goBack()
@@ -78,7 +78,8 @@ const GLScreen = () => {
                 enablePanDownToClose={false}
                 backgroundStyle={{
                     backgroundColor: "#000",
-                    borderRadius: 0
+                    borderRadius: 0,
+                    opacity: 0.85
                 }}
                 handleIndicatorStyle={{
                     backgroundColor: "#fff"
@@ -114,6 +115,7 @@ const GLScreen = () => {
 
             <FiltersControl
                 stay={false}
+                transparent={1}
                 filtersControlRef={filtersControlRef}
                 disableInsertible={true}
             />
@@ -125,16 +127,16 @@ export default GLScreen
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
+    
     camControlContainer: {
         width: "100%",
-        backgroundColor: "#000",
         display: "flex",
         flexDirection: "row-reverse",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
 
     actionBtn: {

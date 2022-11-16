@@ -20,7 +20,7 @@ const bottomSheetSetting = {
     enablePanDownToClose: true,
     backgroundStyle: {
         backgroundColor: "#000",
-        borderRadius: 0
+        borderRadius: 0,
     },
     handleIndicatorStyle: {
         backgroundColor: "#fff"
@@ -39,6 +39,7 @@ const bottomSheetSetting = {
 const FiltersControl = (props) => {
     const {
         filtersControlRef,
+        transparent = 1,
         disableFilter = false,
         disableOption = false,
         disableInsertible = false,
@@ -71,7 +72,8 @@ const FiltersControl = (props) => {
                 enablePanDownToClose={stay ? false : true}
                 backgroundStyle={{
                     backgroundColor: "#000",
-                    borderRadius: 0
+                    borderRadius: 0,
+                    opacity: transparent
                 }}
                 handleIndicatorStyle={{
                     backgroundColor: "#fff"

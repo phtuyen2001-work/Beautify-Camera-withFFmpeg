@@ -31,9 +31,7 @@ const EditsContainer = (props) => {
         <BottomSheetModal
             stackBehavior='push'
             enableDismissOnClose={false}
-
-            onDismiss={() => console.log("dismissed")}
-
+            
             index={-1}
             ref={sheetRef}
             snapPoints={snapPoints}

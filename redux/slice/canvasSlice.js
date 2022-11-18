@@ -68,17 +68,12 @@ export const canvasSlice = createSlice({
             state.selectedText = { ...action.payload }
         },
         changeText: (state, action) => {
-            // console.log("action", action.payload);
-            // console.log("selectedtext",state.selectedText);
             let ind = state.texts.findIndex((item) => item.id === action.payload.id)
             state.texts[ind] = { ...action.payload }
-            // console.log("array",state.texts);
         },
         removeText: (state, action) => {
-            // console.log(state.texts);
             let ind = state.texts.findIndex((item) => item.id == action.payload)
             state.texts.splice(ind, 1)
-            // console.log(state.texts);
         },
         resetText: (state) => {
             state.texts.splice(0, state.texts.length)

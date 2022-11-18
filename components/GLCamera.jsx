@@ -29,7 +29,6 @@ const GLCamera = (props) => {
         }
         loop()
         return () => {
-            // console.log("cancel");
             cancelAnimationFrame(stopId)
         }
     }, [])

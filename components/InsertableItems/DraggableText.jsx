@@ -49,7 +49,6 @@ const DraggableText = (props) => {
 
     const onEndEditInput = () => {
         setIsEditting(false)
-        // dispatch(changeText({ ...textSelector }))
     }
 
     /**

@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
-import { setSeletedText } from '../../../redux/slice/canvasSlice'
+import { changeText } from '../../../redux/slice/canvasSlice'
 
 import CloseSVG from '../../SVG/CloseSVG'
 import CheckSVG from '../../SVG/CheckSVG'
@@ -28,7 +28,7 @@ const ColorsBox = (props) => {
     }
 
     const handleSelectColor = (item) => {
-        dispatch(setSeletedText({...selectedTextSelector, textColor: item}))
+        dispatch(changeText({...selectedTextSelector, textColor: item}))
     }
 
     const handleCheck = () => {

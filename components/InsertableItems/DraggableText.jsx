@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TextInput } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Draggable from 'react-native-draggable'
 
-import { setSeletedText } from '../../redux/slice/canvasSlice'
+import { changeText, setSeletedText } from '../../redux/slice/canvasSlice'
 
 /**
  * DraggableText - jsx
@@ -17,10 +17,11 @@ const DraggableText = (props) => {
     const { text, surfaceSize, editSheetRef } = props
 
     const dispatch = useDispatch()
+    const textSelector = useSelector((state) => {
+        return state.canvasCam.texts.find(i => i.id == text.id)
+    })
 
-    const [textValue, setTextValue] = useState(text.content)
     const [isEditting, setIsEditting] = useState(false)
-
     useEffect(() => {
         if (isEditting === true) {
             inputRef.current.focus()
@@ -36,16 +37,19 @@ const DraggableText = (props) => {
     }
 
     const handleOnLongPressText = () => {
-        dispatch(setSeletedText(text))
+        dispatch(setSeletedText({
+            ...textSelector
+        }))
         editSheetRef.current.snapToIndex(0)
     }
 
     const handleOnChangeInput = (text) => {
-        setTextValue(text)
+        dispatch(changeText({ ...textSelector, content: text }))
     }
 
     const onEndEditInput = () => {
         setIsEditting(false)
+        // dispatch(changeText({ ...textSelector }))
     }
 
     /**
@@ -61,16 +65,16 @@ const DraggableText = (props) => {
             {isEditting === false ?
                 <Text
                     ref={textRef}
-                    style={[styles.textStyle, { color: text.textColor }]}
+                    style={[styles.textStyle, { color: textSelector.textColor }]}
                     onPress={handlePressText}
                     onLongPress={handleOnLongPressText}
                 >
-                    {textValue}
+                    {textSelector.content}
                 </Text> :
                 <TextInput
                     ref={inputRef}
-                    style={[styles.textStyle, { color: text.textColor }]}
-                    value={textValue}
+                    style={[styles.textStyle, { color: textSelector.textColor }]}
+                    value={textSelector.content}
                     onChangeText={handleOnChangeInput}
                     onEndEditing={onEndEditInput}
                 />

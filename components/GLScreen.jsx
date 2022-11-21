@@ -31,7 +31,7 @@ const GLScreen = () => {
     const cameraRef = useRef()
     const filtersControlRef = useRef()
 
-    const snapPoints = useMemo(() => ["3%", "8%", "20%"], [])
+    const snapPoints = useMemo(() => ["4%", "8%", "20%"], [])
 
     const handleLeftBtn = () => {
         navigation.goBack()

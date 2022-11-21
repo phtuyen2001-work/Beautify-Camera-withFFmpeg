@@ -12,7 +12,7 @@ import { showToast } from './CustomToast';
 import CameraAltSVG from './SVG/CameraAltSVG';
 
 /**
- * CameraScreen
+ * CameraScreen - jsx
  */
 
 export default function CameraScreen({ navigation }) {
@@ -128,7 +128,10 @@ export default function CameraScreen({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       {/* Camera component and Gesture handler*/}
-      <CameraComponent cameraRef={camera} />
+      <CameraComponent
+        cameraMode={cameraMode}
+        cameraRef={camera}
+      />
 
       <View style={styles.actionContainer}>
         <SideControl

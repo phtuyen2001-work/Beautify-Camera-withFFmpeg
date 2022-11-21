@@ -8,7 +8,14 @@ import FlashOnSVG from './SVG/FlashOnSVG';
 import FlashAutoSVG from './SVG/FlashAutoSVG';
 import { showToast } from './CustomToast';
 
+/**
+ * CameraComponent - jsx
+ * @prop {object} cameraRef - the ref of the camera
+ * @prop {string} cameraMode - state of the camera's mode
+ */
+
 const CameraComponent = React.memo((props) => {
+    const { cameraRef, cameraMode } = props
 
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const [zoom, setZoom] = useState(0)
@@ -91,7 +98,7 @@ const CameraComponent = React.memo((props) => {
         >
             <Camera
                 style={[styles.camera, props.cameraStyle]}
-                ref={props.cameraRef}
+                ref={cameraRef}
                 type={camType}
                 zoom={zoom}
                 flashMode={flash}
@@ -106,7 +113,7 @@ const CameraComponent = React.memo((props) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.btn}
+                        style={[styles.btn, { display: cameraMode === "video" ? "none" : "flex" }]}
                         onPress={handleFlashMode}
                     >
                         {flashModeIcon()}

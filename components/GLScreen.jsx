@@ -52,7 +52,7 @@ const GLScreen = () => {
         if (!cameraRef) return
 
         const uri = await captureRef(surfaceRef, {
-            format: "jpg",
+            format: "png",
         })
         showToast("Clicked!")
         navigation.navigate("EditScreen", { uri, type: "image" })

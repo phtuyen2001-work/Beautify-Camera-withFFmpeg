@@ -29,6 +29,8 @@ const PotentialHeight = windowHeight * 0.95
 
 const EditScreen = ({ route, navigation }) => {
 
+    // console.log("Edit Screen rendered");
+
     const { type: contentType } = route.params
 
     const [selected, setSeleted] = useState(null)
@@ -53,7 +55,10 @@ const EditScreen = ({ route, navigation }) => {
                     [{ resize: { width: windowWidth } }]
                 )
                 //resize the selected image before displaying it to the screen
-                const manipResult = await manipulateAsync(file.uri)
+                const manipResult = await manipulateAsync(file.uri, [], {
+                    format: "png"
+                })
+                // console.log(manipResult);
                 setSurfaceSize({
                     width: surfaceManip.width,
                     height: surfaceManip.height
@@ -90,7 +95,8 @@ const EditScreen = ({ route, navigation }) => {
                             originX: file.offset?.x,
                             originY: file.offset?.y
                         }
-                    },]
+                    }], 
+                    { format: "png" }
                 )
                 setSeleted(manipResult)
             }
@@ -207,7 +213,7 @@ const EditScreen = ({ route, navigation }) => {
                         <VideoComponent
                             videoRef={videoRef}
                             useNativeControls
-                            isLooping={false}
+                            isLooping={true}
                             resizeMode='contain'
                             source={{ uri: selected?.uri }}
                             style={{

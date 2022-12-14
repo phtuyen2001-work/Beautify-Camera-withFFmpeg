@@ -16,6 +16,9 @@ import CameraAltSVG from './SVG/CameraAltSVG';
  */
 
 export default function CameraScreen({ navigation }) {
+
+  // console.log("Camera Screen rendered");
+
   const dispatch = useDispatch()
 
   // To switch camera mode: photo / video
@@ -138,7 +141,7 @@ export default function CameraScreen({ navigation }) {
           leftBtn={
             <Image
               style={{ width: 45, height: 45, borderRadius: 5, }}
-              source={{ uri: previewImg ? previewImg.localUri : "../assets/photo.jpeg" }}
+              source={{ uri: previewImg ? previewImg.localUri : "../assets/photo.png" }}
             />
           }
           leftBtnFunc={openImagePicker}

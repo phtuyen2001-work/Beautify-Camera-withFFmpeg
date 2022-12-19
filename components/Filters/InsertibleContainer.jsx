@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import EditsContainer from './EditsContainer'
@@ -40,11 +40,11 @@ const InsertibleContainer = () => {
                 </TouchableOpacity>
             </View>
 
-            <EditsContainer sheetRef={stickerRef}>
+            <EditsContainer sheetRef={stickerRef} title="sticker">
                 <StickersBox sheetRef={stickerRef} title="Sticker"/>
             </EditsContainer>
 
-            <EditsContainer sheetRef={textRef}>
+            <EditsContainer sheetRef={textRef} title="text">
                 <TextBox sheetRef={textRef} title="Text"/>
             </EditsContainer>
         </>

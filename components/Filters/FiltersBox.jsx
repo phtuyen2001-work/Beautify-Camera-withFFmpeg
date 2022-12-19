@@ -10,7 +10,7 @@ import ColorMatrix from '../Effects/ColorMatrix';
 
 import CloseSVG from '../SVG/CloseSVG';
 import CheckSVG from '../SVG/CheckSVG';
-const img = require("../../assets/photo.png")
+const img = require("../../assets/photoS.png")
 import filters from './Filters';
 
 /**

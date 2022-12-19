@@ -14,6 +14,10 @@ const EditsContainer = (props) => {
 
     useEffect(() => {
         sheetRef.current?.present()
+        // return () => {
+        //     console.log("test");
+        //     sheetRef.current?.dismiss()
+        // }
     }, [])
 
     const snapPoints = useMemo(() => ["20%"], [])
@@ -29,9 +33,12 @@ const EditsContainer = (props) => {
 
     return (
         <BottomSheetModal
+            name={`modal-${title}`}
             stackBehavior='push'
             enableDismissOnClose={false}
             
+            onDismiss={() => console.log("dismissed")}
+
             index={-1}
             ref={sheetRef}
             snapPoints={snapPoints}

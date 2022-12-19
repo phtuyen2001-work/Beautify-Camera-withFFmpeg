@@ -58,7 +58,7 @@ const EditScreen = ({ route, navigation }) => {
                 const manipResult = await manipulateAsync(file.uri, [], {
                     format: "png"
                 })
-                // console.log(manipResult);
+                console.log(manipResult);
                 setSurfaceSize({
                     width: surfaceManip.width,
                     height: surfaceManip.height
@@ -95,7 +95,7 @@ const EditScreen = ({ route, navigation }) => {
                             originX: file.offset?.x,
                             originY: file.offset?.y
                         }
-                    }], 
+                    }],
                     { format: "png" }
                 )
                 setSeleted(manipResult)
@@ -203,7 +203,10 @@ const EditScreen = ({ route, navigation }) => {
                                 }}
                             >
                                 <Effects width={selected.width} height={selected.height}>
-                                    <GLImage source={{ uri: selected?.uri }} />
+                                    <GLImage
+                                        source={{ uri: selected?.uri }}
+                                        resizeMode="contain"
+                                    />
                                 </Effects>
                             </Surface>
                         </View>
@@ -226,7 +229,7 @@ const EditScreen = ({ route, navigation }) => {
             </View>
 
             {contentType === "image" &&
-                <FiltersControl transparent={0.8}/>}
+                <FiltersControl transparent={0.8} />}
 
             {textSelector.length > 0 &&
                 <EditInsertibleContainer

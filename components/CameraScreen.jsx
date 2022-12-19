@@ -141,7 +141,7 @@ export default function CameraScreen({ navigation }) {
           leftBtn={
             <Image
               style={{ width: 45, height: 45, borderRadius: 5, }}
-              source={{ uri: previewImg ? previewImg.localUri : "../assets/photo.png" }}
+              source={{ uri: previewImg ? previewImg.localUri : "../assets/photoS.png" }}
             />
           }
           leftBtnFunc={openImagePicker}

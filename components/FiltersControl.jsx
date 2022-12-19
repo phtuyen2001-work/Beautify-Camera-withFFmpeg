@@ -30,10 +30,11 @@ const bottomSheetSetting = {
 /**
  * FiltersControl - jsx
  * @prop {object} filtersControlRef - the ref of the FiltersControl
+ * @prop {number} transparent - indicate the transparent of the FiltersControl
  * @prop {boolean} disableFilter - to disable the Filter box
  * @prop {boolean} disableOption - to disable the Option box
  * @prop {boolean} disableInsertible - to disable the Insertible box
- * @prop {boolean} to - to decide that FiltersControl can be able to stay at the minimum of 5% of height 
+ * @prop {boolean} stay - to decide that FiltersControl can be able to stay at the minimum of 5% of height 
  */
 
 const FiltersControl = (props) => {
@@ -128,7 +129,7 @@ const FiltersControl = (props) => {
                 </BottomSheet>
             }
 
-            {!disableFilter &&
+            {/* {!disableFilter &&
                 <BottomSheet
                     {...bottomSheetSetting}
                     ref={filterRef}
@@ -138,16 +139,16 @@ const FiltersControl = (props) => {
                 >
                     <FiltersBox sheetRef={filterRef} title="Filter" />
                 </BottomSheet>
-            }
+            } */}
 
-            {!disableOption &&
+            {/* {!disableOption &&
                 <BottomSheet
                     {...bottomSheetSetting}
                     ref={optionRef}
                 >
                     <OptionsContainer />
                 </BottomSheet>
-            }
+            } */}
         </>
     )
 }

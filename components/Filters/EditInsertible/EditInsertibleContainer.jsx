@@ -68,7 +68,7 @@ const EditInsertibleContainer = (props) => {
                 </View>
             </BottomSheet>
 
-            <EditsContainer sheetRef={colorSheetRef}>
+            <EditsContainer sheetRef={colorSheetRef} title="text-colorbox">
                 <ColorsBox sheetRef={colorSheetRef} title="Text Color"/>
             </EditsContainer>
         </>

@@ -21,7 +21,7 @@ const EditVideoScreen = ({ navigation, route }) => {
     const videoRef = useRef()
     const surfaceRef = useRef()
 
-    const { contrast, saturation, brightness, blur } = useSelector(state => state.videoCanvasCam)
+    const { contrast, saturation, brightness, gamma } = useSelector(state => state.videoCanvasCam)
     // console.log(contrast, saturation, brightness, blur);
 
     const [selectedVideo, setSelectedVideo] = useState(null)
@@ -48,7 +48,7 @@ const EditVideoScreen = ({ navigation, route }) => {
             contrast,
             saturation,
             brightness,
-            blur
+            gamma
         }
 
         navigation.navigate("CameraScreen")

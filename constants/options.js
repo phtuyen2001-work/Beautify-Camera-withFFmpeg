@@ -56,12 +56,18 @@ const videoOptions = {
         maximumValue: 1,
         step: 0.1,
     },
-    blur: {
-        initialValue: 0,
-        minimumValue: 0,
-        maximumValue: 6,
-        step: 0.05,
-    },
+    gamma: {
+        initialValue: 1.0,
+        minimumValue: 0.1,
+        maximumValue: 10,
+        step: 0.1,
+    }
+    // blur: {
+    //     initialValue: 0,
+    //     minimumValue: 0,
+    //     maximumValue: 6,
+    //     step: 0.05,
+    // },
 }
 
 export {

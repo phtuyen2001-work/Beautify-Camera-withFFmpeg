@@ -72,6 +72,7 @@ async function handleProcessFFmpeg(resource, filters) {
             eq=contrast=${filters.contrast}
             :brightness=${filters.brightness}
             :saturation=${filters.saturation}
+            :gamma=${filters.gamma}
             `,
         })
     })

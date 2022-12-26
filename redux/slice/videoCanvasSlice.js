@@ -8,7 +8,8 @@ const initialState = {
     contrast: 1.0,
     saturation: 1.0,
     brightness: 0.0,
-    blur: 0,
+    gamma: 1.0
+    // blur: 0,
 }
 
 const videoCanvasSlice = createSlice({
@@ -24,21 +25,24 @@ const videoCanvasSlice = createSlice({
         setBrightnessVideo: (state, action) => {
             state.brightness = action.payload
         },
-        setBlurVideo: (state, action) => {
-            state.blur = action.payload
+        setGammaVideo: (state, action) => {
+            state.gamma = action.payload
         },
+        // setBlurVideo: (state, action) => {
+        //     state.blur = action.payload
+        // },
         resetVideoCanvas: (state) => {
             state.contrast = initialState.contrast,
             state.saturation = initialState.saturation,
             state.brightness = initialState.brightness,
-            state.blur = initialState.blur
+            state.gamma = initialState.gamma
         }
     }
 })
 
 export const {
     setContrastVideo, setSaturationVideo, setBrightnessVideo,
-    setBlurVideo,
+    setGammaVideo,
     resetVideoCanvas
 } = videoCanvasSlice.actions
 

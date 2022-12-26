@@ -6,17 +6,18 @@ import { imageOptions, videoOptions } from '../../constants/options'
 
 import EditsContainer from './EditsContainer'
 import SliderBox from './slider/SliderBox'
-import { setBlurVideo, setBrightnessVideo, setContrastVideo, setSaturationVideo } from '../../redux/slice/videoCanvasSlice'
+import { setBrightnessVideo, setContrastVideo, setGammaVideo, setSaturationVideo } from '../../redux/slice/videoCanvasSlice'
 
 /**
  * OptionsContainer - jsx
+ * @prop {string} canvas - to indicate the type of resource 
  */
 
 const OptionsContainer = (props) => {
     const { canvas } = props
 
     const dispatch = useDispatch()
-    const effectsSelector = useSelector(state => state.canvasCam)
+    const effectsSelector = useSelector(state => canvas === "image" ? state.canvasCam : state.videoCanvasCam)
 
     const options = useMemo(() => {
         return canvas === "image" ?
@@ -68,9 +69,9 @@ const OptionsContainer = (props) => {
                 setValueFunction: (newValue) => dispatch(setBrightnessVideo(newValue))
             },
             {
-                title: "Blur",
-                ...videoOptions.blur,
-                setValueFunction: (newValue) => dispatch(setBlurVideo(newValue))
+                title: "Gamma",
+                ...videoOptions.gamma,
+                setValueFunction: (newValue) => dispatch(setGammaVideo(newValue))
             },
         ]
     }, [])

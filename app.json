@@ -39,7 +39,10 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to take photos and record video",
         "NSPhotoLibraryAddUsageDescription": "Allow this app to save photos.",
-        "NSPhotoLibraryUsageDescription": "Allow this app to access your photos."
+        "NSPhotoLibraryUsageDescription": "Allow this app to access your photos.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       },
       "bundleIdentifier": "com.phtuyen2001work.beautifycamera"
     },

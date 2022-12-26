@@ -47,11 +47,16 @@ export default function CameraScreen({ navigation }) {
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
     })
-
+    
     if (!pickerResult.cancelled) {
       //reset canvas before navigating to the EditScreen
       dispatch(resetCanvas())
-      navigation.navigate("EditScreen", { ...pickerResult })
+      if (pickerResult.type === "image") {
+        navigation.navigate("EditScreen", { ...pickerResult })
+      }
+      else {
+        navigation.navigate("EditVideoScreen", { ...pickerResult })
+      }
     }
   }
 

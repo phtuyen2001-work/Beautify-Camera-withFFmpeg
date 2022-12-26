@@ -11,7 +11,7 @@ import { Video } from 'expo-av'
  */
 
 const VideoComponent = (props) => {
-    const { onFrame, videoRef, ...rest } = props
+    const { onFrame, uri, videoRef, ...rest } = props
 
     const [videoStatus, setVideoStatus] = useState({})
 
@@ -22,6 +22,7 @@ const VideoComponent = (props) => {
                 width: "100%",
                 height: 400
             }}
+            source={{ uri: uri }}
             onPlaybackStatusUpdate={status => setVideoStatus(() => status)}
             {...rest}
         >

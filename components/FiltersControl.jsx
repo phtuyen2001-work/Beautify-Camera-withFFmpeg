@@ -129,7 +129,7 @@ const FiltersControl = (props) => {
                 </BottomSheet>
             }
 
-            {/* {!disableFilter &&
+            {!disableFilter &&
                 <BottomSheet
                     {...bottomSheetSetting}
                     ref={filterRef}
@@ -139,16 +139,16 @@ const FiltersControl = (props) => {
                 >
                     <FiltersBox sheetRef={filterRef} title="Filter" />
                 </BottomSheet>
-            } */}
+            }
 
-            {/* {!disableOption &&
+            {!disableOption &&
                 <BottomSheet
                     {...bottomSheetSetting}
                     ref={optionRef}
                 >
                     <OptionsContainer />
                 </BottomSheet>
-            } */}
+            }
         </>
     )
 }

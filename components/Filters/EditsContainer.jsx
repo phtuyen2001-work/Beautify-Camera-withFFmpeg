@@ -37,7 +37,7 @@ const EditsContainer = (props) => {
             stackBehavior='push'
             enableDismissOnClose={false}
             
-            onDismiss={() => console.log("dismissed")}
+            // onDismiss={() => console.log("dismissed")}
 
             index={-1}
             ref={sheetRef}

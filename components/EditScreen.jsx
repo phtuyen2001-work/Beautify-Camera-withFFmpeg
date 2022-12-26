@@ -13,7 +13,6 @@ import GLImage from "gl-react-image";
 import { Surface } from "gl-react-expo";
 import Effects from './Effects/Effects';
 
-import VideoComponent from './VideoComponent';
 import { showToast } from './CustomToast';
 import DraggableSticker from './InsertableItems/DraggableSticker';
 import DraggableText from './InsertableItems/DraggableText';
@@ -67,9 +66,6 @@ const EditScreen = ({ route, navigation }) => {
             }, (err) => {
                 console.log(err);
             })
-        }
-        else if (file.type === "video") {
-            setSeleted(file)
         }
         else {
             return (
@@ -160,21 +156,21 @@ const EditScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             <View style={styles.top}>
                 <Text onPress={handleCancel} style={styles.topText}>Cancel</Text>
-                {contentType === "image" &&
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Cropper", {
-                            imgSrc: selected.uri,
-                            imageWidth: selected.width,
-                            imageHeight: selected.height
-                        })}>
-                        <CropSVG />
-                    </TouchableOpacity>}
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("Cropper", {
+                        imgSrc: selected.uri,
+                        imageWidth: selected.width,
+                        imageHeight: selected.height
+                    })}>
+                    <CropSVG />
+                </TouchableOpacity>
                 <Text onPress={handleSave} style={styles.topText}>Save</Text>
             </View>
 
 
             <View style={[styles.content]}>
-                {contentType === "image" ? (!selected ? (
+                {!selected ? (
                     <View style={styles.loadingContainer}>
                         <Text style={styles.loadingText}>Loading resource...</Text>
                     </View>
@@ -211,25 +207,10 @@ const EditScreen = ({ route, navigation }) => {
                             </Surface>
                         </View>
                     </ImageZoom>
-                )) : (
-                    <View>
-                        <VideoComponent
-                            videoRef={videoRef}
-                            useNativeControls
-                            isLooping={true}
-                            resizeMode='contain'
-                            source={{ uri: selected?.uri }}
-                            style={{
-                                width: windowWidth,
-                                height: "100%"
-                            }}
-                        />
-                    </View>
                 )}
             </View>
 
-            {contentType === "image" &&
-                <FiltersControl transparent={0.8} />}
+            <FiltersControl transparent={0.8} />
 
             {textSelector.length > 0 &&
                 <EditInsertibleContainer

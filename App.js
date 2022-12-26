@@ -15,6 +15,7 @@ import Cropper from './components/Cropper';
 
 // import "webgltexture-loader-expo"
 import "webgltexture-loader-expo-camera";
+import EditVideoScreen from './components/EditVideoScreen';
 
 const Stack = createNativeStackNavigator()
 
@@ -41,6 +42,12 @@ export default function App() {
                     headerShown: false
                   }}
                 >
+                  {/* <Stack.Screen name="TestAPI" component={TestAPI} /> */}
+
+                  <Stack.Screen
+                    name='EditVideoScreen'
+                    component={EditVideoScreen}
+                  />
                   <Stack.Screen
                     name='CameraScreen'
                     component={CameraScreen}

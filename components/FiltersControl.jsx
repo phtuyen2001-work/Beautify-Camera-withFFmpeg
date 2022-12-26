@@ -13,6 +13,7 @@ import OptionSVG from './SVG/OptionSVG'
 import FilterSVG from './SVG/FilterSVG'
 import ResetSVG from './SVG/ResetSVG'
 import InsertSVG from './SVG/InsertSVG';
+import { resetVideoCanvas } from '../redux/slice/videoCanvasSlice';
 
 const bottomSheetSetting = {
     index: -1,
@@ -34,6 +35,7 @@ const bottomSheetSetting = {
  * @prop {boolean} disableFilter - to disable the Filter box
  * @prop {boolean} disableOption - to disable the Option box
  * @prop {boolean} disableInsertible - to disable the Insertible box
+ * @prop {string} canvas - to indicate the type of resource which this FiltersControl refers to
  * @prop {boolean} stay - to decide that FiltersControl can be able to stay at the minimum of 5% of height 
  */
 
@@ -44,6 +46,7 @@ const FiltersControl = (props) => {
         disableFilter = false,
         disableOption = false,
         disableInsertible = false,
+        canvas="image",
         stay = true
     } = props
 
@@ -60,7 +63,9 @@ const FiltersControl = (props) => {
     }
 
     const handleReset = () => {
-        dispatch(resetCanvas())
+        if(canvas === "image") dispatch(resetCanvas())
+        else dispatch(resetVideoCanvas)
+        
         showToast("Canvas is reset")
     }
 
@@ -146,7 +151,7 @@ const FiltersControl = (props) => {
                     {...bottomSheetSetting}
                     ref={optionRef}
                 >
-                    <OptionsContainer />
+                    <OptionsContainer canvas={canvas} />
                 </BottomSheet>
             }
         </>

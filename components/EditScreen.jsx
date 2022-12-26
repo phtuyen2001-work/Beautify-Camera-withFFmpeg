@@ -57,7 +57,7 @@ const EditScreen = ({ route, navigation }) => {
                 const manipResult = await manipulateAsync(file.uri, [], {
                     format: "png"
                 })
-                console.log(manipResult);
+                // console.log(manipResult);
                 setSurfaceSize({
                     width: surfaceManip.width,
                     height: surfaceManip.height

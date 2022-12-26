@@ -28,6 +28,10 @@ const ensureDirExists = async () => {
     }
 }
 
+const convertToCommand = (filters) => {
+
+}
+
 const handleDeleteCache = (resource) => {
     if (resource) {
         FileSystem.deleteAsync(FileSystem.cacheDirectory + `output/${resource}`)
@@ -53,7 +57,7 @@ async function handleUploadVideo(resource) {
     return result
 }
 
-async function handleProcessFFmpeg(resource, command) {
+async function handleProcessFFmpeg(resource, filters) {
     // console.log("2", resource);
     await fetch(`${httpLink}/execute/${resource.resourceId}`, {
         method: 'POST',
@@ -64,7 +68,11 @@ async function handleProcessFFmpeg(resource, command) {
         body: JSON.stringify({
             resourceId: resource.resourceId,
             type: resource.type,
-            command: "eq=brightness=0.3:gamma_r=1.5",
+            command: `
+            eq=contrast=${filters.contrast}
+            :brightness=${filters.brightness}
+            :saturation=${filters.saturation}
+            `,
         })
     })
         .then(res => res.json())

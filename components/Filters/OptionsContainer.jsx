@@ -2,69 +2,78 @@ import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-nati
 import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setContrast, setSaturation, setBrightness, setBlur, setNegative, setFlyeye } from '../../redux/slice/canvasSlice'
+import { imageOptions, videoOptions } from '../../constants/options'
 
 import EditsContainer from './EditsContainer'
 import SliderBox from './slider/SliderBox'
+import { setBlurVideo, setBrightnessVideo, setContrastVideo, setSaturationVideo } from '../../redux/slice/videoCanvasSlice'
 
 /**
  * OptionsContainer - jsx
  */
 
-const OptionsContainer = () => {
+const OptionsContainer = (props) => {
+    const { canvas } = props
 
     const dispatch = useDispatch()
     const effectsSelector = useSelector(state => state.canvasCam)
 
-    const options = useMemo(() => [
-        {
-            title: "Contrast",
-            initialValue: 1,
-            minimumValue: 0,
-            maximumValue: 4,
-            step: 0.1,
-            setValueFunction: (newValue) => dispatch(setContrast(newValue))
-        },
-        {
-            title: "Saturation",
-            initialValue: 1,
-            minimumValue: 0,
-            maximumValue: 10,
-            step: 0.1,
-            setValueFunction: (newValue) => dispatch(setSaturation(newValue))
-        },
-        {
-            title: "Brightness",
-            initialValue: 1,
-            minimumValue: 0,
-            maximumValue: 4,
-            step: 0.1,
-            setValueFunction: (newValue) => dispatch(setBrightness(newValue))
-        },
-        {
-            title: "Blur",
-            initialValue: 0,
-            minimumValue: 0,
-            maximumValue: 6,
-            step: 0.05,
-            setValueFunction: (newValue) => dispatch(setBlur(newValue))
-        },
-        {
-            title: "Negative",
-            initialValue: 0,
-            minimumValue: 0,
-            maximumValue: 1,
-            step: 0.05,
-            setValueFunction: (newValue) => dispatch(setNegative(newValue))
-        },
-        {
-            title: "Flyeye",
-            initialValue: 0,
-            minimumValue: 0,
-            maximumValue: 1,
-            step: 0.05,
-            setValueFunction: (newValue) => dispatch(setFlyeye(newValue))
-        },
-    ], [])
+    const options = useMemo(() => {
+        return canvas === "image" ?
+        [
+            {
+                title: "Contrast",
+                ...imageOptions.contrast,
+                setValueFunction: (newValue) => dispatch(setContrast(newValue))
+            },
+            {
+                title: "Saturation",
+                ...imageOptions.saturation,
+                setValueFunction: (newValue) => dispatch(setSaturation(newValue))
+            },
+            {
+                title: "Brightness",
+                ...imageOptions.brightness,
+                setValueFunction: (newValue) => dispatch(setBrightness(newValue))
+            },
+            {
+                title: "Blur",
+                ...imageOptions.blur,
+                setValueFunction: (newValue) => dispatch(setBlur(newValue))
+            },
+            {
+                title: "Negative",
+                ...imageOptions.negative,
+                setValueFunction: (newValue) => dispatch(setNegative(newValue))
+            },
+            {
+                title: "Flyeye",
+                ...imageOptions.flyeye,
+                setValueFunction: (newValue) => dispatch(setFlyeye(newValue))
+            },
+        ] : [
+            {
+                title: "Contrast",
+                ...videoOptions.contrast,
+                setValueFunction: (newValue) => dispatch(setContrastVideo(newValue))
+            },
+            {
+                title: "Saturation",
+                ...videoOptions.saturation,
+                setValueFunction: (newValue) => dispatch(setSaturationVideo(newValue))
+            },
+            {
+                title: "Brightness",
+                ...videoOptions.brightness,
+                setValueFunction: (newValue) => dispatch(setBrightnessVideo(newValue))
+            },
+            {
+                title: "Blur",
+                ...videoOptions.blur,
+                setValueFunction: (newValue) => dispatch(setBlurVideo(newValue))
+            },
+        ]
+    }, [])
 
     const sliderSheetRef = useRef()
 
@@ -74,7 +83,7 @@ const OptionsContainer = () => {
         minimumValue: 0,
         maximumValue: 0,
         step: 0,
-        setValueFunction: () => {},
+        setValueFunction: () => { },
         value: 0
     })
 

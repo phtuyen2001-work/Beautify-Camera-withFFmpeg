@@ -1,7 +1,6 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { resetCanvas } from '../redux/slice/canvasSlice'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import VideoComponent from './VideoComponent'
 import FiltersControl from './FiltersControl'
@@ -10,6 +9,8 @@ import Effects from './Effects/Effects'
 import GLImage from 'gl-react-image'
 import { handleDownloadVideo, handleProcessFFmpeg, handleUploadVideo } from '../api/videoApi'
 import { showToast } from './CustomToast'
+import Toast from 'react-native-root-toast'
+import { resetVideoCanvas } from '../redux/slice/videoCanvasSlice'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 const previewImg = require("../assets/photo.png")
@@ -20,11 +21,14 @@ const EditVideoScreen = ({ navigation, route }) => {
     const videoRef = useRef()
     const surfaceRef = useRef()
 
+    const { contrast, saturation, brightness, blur } = useSelector(state => state.videoCanvasCam)
+    // console.log(contrast, saturation, brightness, blur);
+
     const [selectedVideo, setSelectedVideo] = useState(null)
     useEffect(() => {
         const file = route.params
         // console.log(file);
-        if(file.type === "video") {
+        if (file.type === "video") {
             setSelectedVideo(file)
         }
         else {
@@ -34,18 +38,30 @@ const EditVideoScreen = ({ navigation, route }) => {
     }, [])
 
     const handleCancel = () => {
-        dispatch(resetCanvas())
+        dispatch(resetVideoCanvas())
         navigation.goBack()
     }
 
     const handleSave = async () => {
         const result = await handleUploadVideo(selectedVideo)
+        const filters = {
+            contrast,
+            saturation,
+            brightness,
+            blur
+        }
+
         navigation.navigate("CameraScreen")
+        dispatch(resetVideoCanvas())
         showToast("Your video is sent and being processed, please wait!")
-        // console.log(result);
-        await handleProcessFFmpeg(result)
+
+        await handleProcessFFmpeg(result, filters)
         await handleDownloadVideo(result)
-        showToast("Your requested video is finished!")
+        showToast("Your requested video is finished!", {
+            // onPress: () => navigation.navigate("")
+            duration: Toast.durations.LONG,
+            position: Toast.positions.TOP
+        })
     }
 
     return (
@@ -56,7 +72,7 @@ const EditVideoScreen = ({ navigation, route }) => {
             </View>
 
             <View style={styles.content}>
-                <VideoComponent 
+                <VideoComponent
                     videoRef={videoRef}
                     uri={selectedVideo?.uri}
                     useNativeControls
@@ -83,7 +99,12 @@ const EditVideoScreen = ({ navigation, route }) => {
                 </View> */}
             </View>
 
-            <FiltersControl transparent={0.8}/>
+            <FiltersControl
+                canvas="video"
+                transparent={0.8}
+                disableInsertible={true}
+                disableFilter={true}
+            />
         </View>
     )
 }
@@ -117,6 +138,6 @@ const styles = StyleSheet.create({
     },
     video: {
         width: "100%",
-        height: 300
+        height: 500
     }
 })

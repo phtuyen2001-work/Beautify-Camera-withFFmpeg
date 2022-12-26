@@ -94,7 +94,7 @@ export const canvasSlice = createSlice({
             state.negative = 0
             state.flyeye = 0,
 
-                state.stickers = []
+            state.stickers = []
             state.texts = []
             state.selectedText = {}
         }

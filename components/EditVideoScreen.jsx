@@ -4,30 +4,33 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import VideoComponent from './VideoComponent'
 import FiltersControl from './FiltersControl'
-import { Surface } from 'gl-react-expo'
-import Effects from './Effects/Effects'
-import GLImage from 'gl-react-image'
+// import { Surface } from 'gl-react-expo'
+// import Effects from './Effects/Effects'
+// import GLImage from 'gl-react-image'
 import { handleDownloadVideo, handleProcessFFmpeg, handleUploadVideo } from '../api/videoApi'
 import { showToast } from './CustomToast'
 import Toast from 'react-native-root-toast'
 import { resetVideoCanvas } from '../redux/slice/videoCanvasSlice'
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
-const previewImg = require("../assets/photo.png")
+// const previewImg = require("../assets/photo.png")
+
+/**
+ * EditVideoScreen - jsx
+ * This component is used when the selected resource is video type 
+ */
 
 const EditVideoScreen = ({ navigation, route }) => {
 
     const dispatch = useDispatch()
     const videoRef = useRef()
-    const surfaceRef = useRef()
+    // const surfaceRef = useRef()
 
     const { contrast, saturation, brightness, gamma } = useSelector(state => state.videoCanvasCam)
-    // console.log(contrast, saturation, brightness, blur);
 
     const [selectedVideo, setSelectedVideo] = useState(null)
     useEffect(() => {
         const file = route.params
-        // console.log(file);
         if (file.type === "video") {
             setSelectedVideo(file)
         }

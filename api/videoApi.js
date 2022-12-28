@@ -2,8 +2,13 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { Platform } from 'react-native';
 
+/**
+ * videoApi.js
+ */
+
 const httpLink = `http://10.0.0.91:3000/api`
 
+//To create a new FormData
 const createFormData = (input, body = {}) => {
     const data = new FormData();
 
@@ -16,10 +21,11 @@ const createFormData = (input, body = {}) => {
     Object.keys(body).forEach((key) => {
         data.append(key, body[key]);
     });
-    // console.log(data);
+
     return data;
 };
 
+//To ensure that the cache directory in the app exists
 const ensureDirExists = async () => {
     const dirInfo = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + "output/")
     if (!dirInfo.exists) {
@@ -28,6 +34,7 @@ const ensureDirExists = async () => {
     }
 }
 
+//To delete all files in the caches when the resources are saved in the media library
 const handleDeleteCache = (resource) => {
     if (resource) {
         FileSystem.deleteAsync(FileSystem.cacheDirectory + `output/${resource}`)
@@ -41,6 +48,7 @@ const handleDeleteCache = (resource) => {
     }
 }
 
+//call the Upload api
 async function handleUploadVideo(resource) {
     const result = await fetch(`${httpLink}/upload`, {
         method: "POST",
@@ -53,6 +61,7 @@ async function handleUploadVideo(resource) {
     return result
 }
 
+//To call the Execute api
 async function handleProcessFFmpeg(resource, filters) {
     // console.log("2", resource);
     await fetch(`${httpLink}/execute/${resource.resourceId}`, {
@@ -77,6 +86,7 @@ async function handleProcessFFmpeg(resource, filters) {
         .catch(err => console.log(err))
 }
 
+//To get the file with api
 async function handleDownloadVideo(resource) {
     await ensureDirExists()
 

@@ -16,7 +16,7 @@ const createFormData = (input, body = {}) => {
     Object.keys(body).forEach((key) => {
         data.append(key, body[key]);
     });
-
+    // console.log(data);
     return data;
 };
 
@@ -26,10 +26,6 @@ const ensureDirExists = async () => {
         console.log("Output directory doesnot exist, creating .....");
         await FileSystem.makeDirectoryAsync(FileSystem.cacheDirectory + "output/", { intermediates: true })
     }
-}
-
-const convertToCommand = (filters) => {
-
 }
 
 const handleDeleteCache = (resource) => {

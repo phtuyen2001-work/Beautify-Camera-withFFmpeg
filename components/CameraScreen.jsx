@@ -93,6 +93,11 @@ export default function CameraScreen({ navigation }) {
     navigation.navigate("EditScreen", { ...photo, type: "image" })
   }
 
+  const getFileExt = (str) => {
+    const arr = str.split(".")
+    return arr[1]
+  }
+
   const handleStartRecord = async () => {
     if (!camera) return
 
@@ -111,7 +116,13 @@ export default function CameraScreen({ navigation }) {
       setRecordTime(0)
     }
 
-    if (video) navigation.navigate("EditScreen", { ...video, type: "video" })
+    let fileExt = getFileExt(video.uri)
+
+    if (video) navigation.navigate("EditVideoScreen", { 
+      ...video, 
+      type: "video", 
+      fileName: `video.${fileExt}` 
+    })
   }
 
   const handleStopRecord = () => {
